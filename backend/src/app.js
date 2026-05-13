@@ -12,7 +12,7 @@ const rateLimit = require('express-rate-limit');
 dotenv.config();
 
 const connectDB = require('./config/database');
-const connectRedis = require('./config/redis');
+// const connectRedis = require('./config/redis');
 const errorHandler = require('./middleware/errorMiddleware');
 const { apiLimiter } = require('./middleware/rateLimiter');
 
@@ -27,7 +27,7 @@ const app = express();
 
 // Connect to databases
 connectDB();
-connectRedis();
+// connectRedis();
 
 // Global rate limiter
 const globalLimiter = rateLimit({
@@ -79,14 +79,15 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 
-// 404 handler
-app.use('*', (req, res) => {
+// 404 handler - FIXED with named parameter
+app.use('/*splat', (req, res) => {
   res.status(404).json({
     success: false,
     message: `Cannot find ${req.originalUrl} on this server`,
