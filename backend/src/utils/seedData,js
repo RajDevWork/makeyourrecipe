@@ -1,0 +1,246 @@
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
+const User = require('../models/User');
+const Category = require('../models/Category');
+const Recipe = require('../models/Recipe');
+
+dotenv.config();
+
+const categories = [
+  { name: 'Breakfast', slug: 'breakfast', description: 'Start your day with delicious breakfast recipes', icon: '🍳', image: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666' },
+  { name: 'Lunch', slug: 'lunch', description: 'Midday meals to keep you energized', icon: '🥗', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' },
+  { name: 'Dinner', slug: 'dinner', description: 'Evening feasts for the whole family', icon: '🍽️', image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836' },
+  { name: 'Desserts', slug: 'desserts', description: 'Sweet treats to satisfy your cravings', icon: '🍰', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587' },
+  { name: 'Vegetarian', slug: 'vegetarian', description: 'Delicious meat-free options', icon: '🥬', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd' },
+  { name: 'Vegan', slug: 'vegan', description: 'Plant-based recipes full of flavor', icon: '🌱', image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999' },
+  { name: 'Quick & Easy', slug: 'quick-easy', description: 'Ready in 30 minutes or less', icon: '⚡', image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71' },
+  { name: 'Healthy', slug: 'healthy', description: 'Nutritious recipes for a better lifestyle', icon: '💪', image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061' },
+];
+
+const recipes = [
+  {
+    title: 'Classic Spaghetti Carbonara',
+    description: 'A traditional Italian pasta dish made with eggs, cheese, pancetta, and black pepper. Creamy, rich, and absolutely delicious!',
+    ingredients: [
+      { name: 'Spaghetti', amount: '400', unit: 'g' },
+      { name: 'Pancetta', amount: '150', unit: 'g' },
+      { name: 'Eggs', amount: '4', unit: 'large' },
+      { name: 'Parmesan cheese', amount: '100', unit: 'g', note: 'freshly grated' },
+      { name: 'Black pepper', amount: '1', unit: 'tsp', note: 'freshly ground' },
+      { name: 'Salt', amount: '1', unit: 'tsp' },
+    ],
+    steps: [
+      { order: 1, description: 'Bring a large pot of salted water to boil. Cook spaghetti according to package instructions.' },
+      { order: 2, description: 'While pasta cooks, heat a large pan over medium heat. Cook pancetta until crispy, about 5-7 minutes.' },
+      { order: 3, description: 'In a bowl, whisk together eggs, grated Parmesan, and black pepper.' },
+      { order: 4, description: 'Drain pasta, reserving 1 cup of pasta water. Add hot pasta to the pan with pancetta.' },
+      { order: 5, description: 'Remove from heat and quickly pour in egg mixture, stirring constantly to create a creamy sauce.' },
+      { order: 6, description: 'Add pasta water as needed to reach desired consistency. Serve immediately with extra Parmesan.' },
+    ],
+    cookingTime: { prep: 10, cook: 15, total: 25 },
+    difficulty: 'medium',
+    servings: 4,
+    tags: ['pasta', 'italian', 'dinner', 'comfort food'],
+    nutritionalInfo: {
+      calories: 650,
+      protein: 25,
+      carbs: 75,
+      fat: 28,
+      fiber: 3,
+    },
+    images: ['https://images.unsplash.com/photo-1612874742237-6526221588e3'],
+  },
+  {
+    title: 'Avocado Toast with Poached Egg',
+    description: 'A trendy and nutritious breakfast that combines creamy avocado with perfectly poached eggs.',
+    ingredients: [
+      { name: 'Sourdough bread', amount: '2', unit: 'slices' },
+      { name: 'Avocado', amount: '1', unit: 'ripe' },
+      { name: 'Eggs', amount: '2', unit: 'large' },
+      { name: 'Lemon juice', amount: '1', unit: 'tbsp' },
+      { name: 'Red pepper flakes', amount: '1/2', unit: 'tsp' },
+      { name: 'Sea salt', amount: '1/4', unit: 'tsp' },
+      { name: 'Black pepper', amount: '1/4', unit: 'tsp' },
+    ],
+    steps: [
+      { order: 1, description: 'Toast bread slices until golden and crisp.' },
+      { order: 2, description: 'In a bowl, mash avocado with lemon juice, salt, and pepper.' },
+      { order: 3, description: 'Bring a pot of water to simmer. Add a splash of vinegar.' },
+      { order: 4, description: 'Crack eggs into separate cups and gently slide into simmering water.' },
+      { order: 5, description: 'Poach for 3-4 minutes until whites are set but yolks are runny.' },
+      { order: 6, description: 'Spread mashed avocado on toast, top with poached eggs.' },
+      { order: 7, description: 'Sprinkle with red pepper flakes and additional seasoning.' },
+    ],
+    cookingTime: { prep: 5, cook: 5, total: 10 },
+    difficulty: 'easy',
+    servings: 2,
+    tags: ['breakfast', 'healthy', 'vegetarian', 'quick'],
+    nutritionalInfo: {
+      calories: 450,
+      protein: 15,
+      carbs: 35,
+      fat: 28,
+      fiber: 10,
+    },
+    images: ['https://images.unsplash.com/photo-1525351484163-7529414344d8'],
+  },
+  {
+    title: 'Vegetarian Buddha Bowl',
+    description: 'A colorful and nutritious bowl packed with roasted vegetables, quinoa, and tahini dressing.',
+    ingredients: [
+      { name: 'Quinoa', amount: '1', unit: 'cup' },
+      { name: 'Sweet potato', amount: '1', unit: 'large', note: 'cubed' },
+      { name: 'Chickpeas', amount: '1', unit: 'can', note: 'drained and rinsed' },
+      { name: 'Kale', amount: '2', unit: 'cups', note: 'massaged' },
+      { name: 'Avocado', amount: '1', unit: 'sliced' },
+      { name: 'Tahini', amount: '1/4', unit: 'cup' },
+      { name: 'Lemon', amount: '1', unit: 'juiced' },
+    ],
+    steps: [
+      { order: 1, description: 'Preheat oven to 400°F (200°C). Cook quinoa according to package instructions.' },
+      { order: 2, description: 'Toss sweet potato cubes and chickpeas with oil and spices. Roast for 20 minutes.' },
+      { order: 3, description: 'Massage kale with olive oil and lemon juice until softened.' },
+      { order: 4, description: 'Make dressing by whisking tahini, lemon juice, garlic, and water.' },
+      { order: 5, description: 'Assemble bowls with quinoa, roasted vegetables, kale, and avocado.' },
+      { order: 6, description: 'Drizzle with tahini dressing and sprinkle with sesame seeds.' },
+    ],
+    cookingTime: { prep: 15, cook: 20, total: 35 },
+    difficulty: 'easy',
+    servings: 2,
+    tags: ['healthy', 'vegetarian', 'vegan', 'bowl', 'lunch'],
+    nutritionalInfo: {
+      calories: 580,
+      protein: 18,
+      carbs: 85,
+      fat: 22,
+      fiber: 15,
+    },
+    images: ['https://images.unsplash.com/photo-1512621776951-a57141f2eefd'],
+  },
+];
+
+const seedDatabase = async () => {
+  try {
+    console.log('🌱 Starting database seeding...');
+    
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('✅ Connected to MongoDB');
+
+    // Clear existing data
+    await User.deleteMany({});
+    await Category.deleteMany({});
+    await Recipe.deleteMany({});
+    console.log('🗑️ Cleared existing data');
+
+    // Create categories
+    const createdCategories = await Category.insertMany(categories);
+    console.log(`✅ Created ${createdCategories.length} categories`);
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash('Password123!', 12);
+
+    // Create admin user
+    const admin = await User.create({
+      name: 'Admin User',
+      email: 'admin@recipebook.com',
+      password: hashedPassword,
+      role: 'admin',
+      isEmailVerified: true,
+      isActive: true,
+      bio: 'Platform administrator and food enthusiast',
+      avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=0D8F81&color=fff',
+    });
+
+    // Create regular users
+    const users = await User.insertMany([
+      {
+        name: 'Sarah Johnson',
+        email: 'sarah@example.com',
+        password: hashedPassword,
+        role: 'user',
+        isEmailVerified: true,
+        isActive: true,
+        bio: 'Home cook and recipe developer',
+        avatar: 'https://ui-avatars.com/api/?name=Sarah+Johnson&background=FF6B6B&color=fff',
+        stats: { totalRecipes: 3, totalLikes: 45, totalFollowers: 12, totalFollowing: 8 },
+      },
+      {
+        name: 'Michael Chen',
+        email: 'michael@example.com',
+        password: hashedPassword,
+        role: 'user',
+        isEmailVerified: true,
+        isActive: true,
+        bio: 'Professional chef sharing my recipes',
+        avatar: 'https://ui-avatars.com/api/?name=Michael+Chen&background=4ECDC4&color=fff',
+        stats: { totalRecipes: 5, totalLikes: 128, totalFollowers: 45, totalFollowing: 23 },
+      },
+      {
+        name: 'Emma Wilson',
+        email: 'emma@example.com',
+        password: hashedPassword,
+        role: 'user',
+        isEmailVerified: true,
+        isActive: true,
+        bio: 'Healthy eating advocate',
+        avatar: 'https://ui-avatars.com/api/?name=Emma+Wilson&background=FFE66D&color=333',
+        stats: { totalRecipes: 2, totalLikes: 32, totalFollowers: 8, totalFollowing: 15 },
+      },
+    ]);
+    console.log(`✅ Created ${users.length + 1} users`);
+
+    // Create recipes
+    const allUsers = [admin, ...users];
+    const createdRecipes = [];
+    
+    for (let i = 0; i < recipes.length; i++) {
+      const recipe = recipes[i];
+      const randomUser = allUsers[Math.floor(Math.random() * allUsers.length)];
+      const randomCategory = createdCategories[Math.floor(Math.random() * createdCategories.length)];
+      
+      const newRecipe = await Recipe.create({
+        ...recipe,
+        author: randomUser._id,
+        category: randomCategory._id,
+        status: 'published',
+        'stats.views': Math.floor(Math.random() * 1000) + 100,
+        'stats.likes': Math.floor(Math.random() * 100) + 10,
+        'stats.saves': Math.floor(Math.random() * 50) + 5,
+      });
+      
+      createdRecipes.push(newRecipe);
+      
+      // Update user's total recipes count
+      await User.findByIdAndUpdate(randomUser._id, {
+        $inc: { 'stats.totalRecipes': 1 }
+      });
+      
+      // Update category recipe count
+      await Category.findByIdAndUpdate(randomCategory._id, {
+        $inc: { recipeCount: 1 }
+      });
+    }
+    
+    console.log(`✅ Created ${createdRecipes.length} recipes`);
+
+    console.log('\n🎉 Database seeding completed successfully!');
+    console.log('\n📝 Login credentials:');
+    console.log('Admin - Email: admin@recipebook.com, Password: Password123!');
+    console.log('User  - Email: sarah@example.com, Password: Password123!');
+    console.log('User  - Email: michael@example.com, Password: Password123!');
+    console.log('User  - Email: emma@example.com, Password: Password123!');
+    
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error seeding database:', error);
+    process.exit(1);
+  }
+};
+
+// Run seeder if called directly
+if (require.main === module) {
+  seedDatabase();
+}
+
+module.exports = seedDatabase;
