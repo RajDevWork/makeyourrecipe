@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
   },
   emailVerificationToken: String,
   passwordResetToken: String,
-  passwordResetExpires: Date,
+  passwordResetpires: Date,
   preferences: {
     dietaryRestrictions: [String],
     favoriteCuisines: [String],

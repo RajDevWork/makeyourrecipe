@@ -103,7 +103,7 @@ class RecipeService {
       }
 
       // Cache recipe for 1 hour
-      await redisClient.setex(`recipe_${recipeId}`, 3600, JSON.stringify(recipe));
+      await redisClient.set(`recipe_${recipeId}`, 3600, JSON.stringify(recipe));
 
       return recipe;
     } catch (error) {
@@ -327,7 +327,7 @@ class RecipeService {
         .populate('category', 'name');
 
       // Cache for 1 hour
-      await redisClient.setex('trending_recipes', 3600, JSON.stringify(recipes));
+      await redisClient.set('trending_recipes', 3600, JSON.stringify(recipes));
 
       return recipes;
     } catch (error) {
@@ -351,7 +351,7 @@ class RecipeService {
         .populate('category', 'name');
 
       // Cache for 1 hour
-      await redisClient.setex('featured_recipes', 3600, JSON.stringify(recipes));
+      await redisClient.set('featured_recipes', 3600, JSON.stringify(recipes));
 
       return recipes;
     } catch (error) {

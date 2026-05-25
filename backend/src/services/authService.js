@@ -31,7 +31,7 @@ const resendVerificationEmail = async (email) => {
     { expiresIn: '24h' }
   );
 
-  await redisClient.setex(`verify_${verificationToken}`, 86400, user._id.toString());
+  await redisClient.set(`verify_${verificationToken}`, 86400, user._id.toString());
   
   // Send email logic here
   return verificationToken;

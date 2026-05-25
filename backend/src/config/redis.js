@@ -142,7 +142,7 @@ class RedisClient {
     }
     try {
       const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
-      await this.client.setex(key, ttl, stringValue);
+      await this.client.set(key, ttl, stringValue);
       console.log(`✅ Redis SET successful: ${key.substring(0, 30)}...`);
       return true;
     } catch (error) {

@@ -20,7 +20,7 @@ const register = async (req, res, next) => {
     
     // Generate email verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    // await redisClient.setex(`verify_${verificationToken}`, 86400, user._id.toString());
+    await redisClient.set(`verify_${verificationToken}`, 86400, user._id.toString());
     
     // Send verification email
     // const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
@@ -30,7 +30,7 @@ const register = async (req, res, next) => {
     const refreshToken = generateRefreshToken(user._id);
 
     // Store refresh token in Redis
-    // await redisClient.setex(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
+    await redisClient.set(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
@@ -76,7 +76,7 @@ const login = async (req, res, next) => {
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    // await redisClient.setex(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
+    // await redisClient.set(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
@@ -140,7 +140,7 @@ const logout = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     if (accessToken) {
       // Blacklist the access token
-      // await redisClient.setex(`blacklist_${accessToken}`, 900, 'true');
+      // await redisClient.set(`blacklist_${accessToken}`, 900, 'true');
     }
     
     if (req.user) {
@@ -166,10 +166,10 @@ const forgotPassword = async (req, res, next) => {
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetExpires = Date.now() + 3600000; // 1 hour
+    const resetpires = Date.now() + 3600000; // 1 hour
 
     user.passwordResetToken = resetToken;
-    user.passwordResetExpires = resetExpires;
+    user.passwordResetpires = resetpires;
     await user.save();
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
@@ -186,7 +186,7 @@ const resetPassword = async (req, res, next) => {
     const { token, password } = req.body;
     const user = await User.findOne({
       passwordResetToken: token,
-      passwordResetExpires: { $gt: Date.now() }
+      passwordResetpires: { $gt: Date.now() }
     });
 
     if (!user) {
@@ -195,7 +195,7 @@ const resetPassword = async (req, res, next) => {
 
     user.password = password;
     user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
+    user.passwordResetpires = undefined;
     await user.save();
 
     res.json({ success: true, message: 'Password reset successful' });

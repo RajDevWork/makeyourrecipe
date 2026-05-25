@@ -9,21 +9,26 @@ const protect = async (req, res, next) => {
     
     if (req.cookies.accessToken) {
       token = req.cookies.accessToken;
-    } else if (req.headers.authorization?.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
+    } 
+    // else if (req.headers.authorization?.startsWith('Bearer')) {
+    //   token = req.headers.authorization.split(' ')[1];
+    // }
 
+
+    // console.log("token = ",token)
     if (!token) {
       return next(new AppError('You are not logged in', 401));
     }
 
     // Check if token is blacklisted
-    const isBlacklisted = await redisClient.get(`blacklist_${token}`);
-    if (isBlacklisted) {
-      return next(new AppError('Token is invalid', 401));
-    }
+    // const isBlacklisted = await redisClient.get(`blacklist_${token}`);
+    // if (isBlacklisted) {
+    //   return next(new AppError('Token is invalid', 401));
+    // }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // console.log("decoded = ",decoded)
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user || !user.isActive) {
@@ -33,6 +38,7 @@ const protect = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    console.log("error = ",error)
     next(new AppError('Not authorized', 401));
   }
 };

@@ -5,18 +5,18 @@ const { redisClient } = require('../config/redis');
 
 const getAllCategories = async (req, res, next) => {
   try {
-    const cached = await redisClient.get('all_categories');
-    if (cached) {
-      return res.json({
-        success: true,
-        data: JSON.parse(cached),
-      });
-    }
+    // const cached = await redisClient.get('all_categories');
+    // if (cached) {
+    //   return res.json({
+    //     success: true,
+    //     data: JSON.parse(cached),
+    //   });
+    // }
 
     const categories = await Category.find({ isActive: true })
       .sort({ recipeCount: -1 });
 
-    await redisClient.setex('all_categories', 3600, JSON.stringify(categories));
+    // await redisClient.set('all_categories', 3600, JSON.stringify(categories));
 
     res.json({
       success: true,

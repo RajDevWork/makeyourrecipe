@@ -8,7 +8,7 @@ const getOrSetCache = async (key, callback, ttl = 3600) => {
   }
   
   const freshData = await callback();
-  await redisClient.setex(key, ttl, JSON.stringify(freshData));
+  await redisClient.set(key, ttl, JSON.stringify(freshData));
   
   return freshData;
 };

@@ -42,8 +42,8 @@ const createRecipe = async (req, res, next) => {
     });
 
     // Clear cache
-    await redisClient.del('homepage_recipes');
-    await redisClient.del('trending_recipes');
+    // await redisClient.del('homepage_recipes');
+    // await redisClient.del('trending_recipes');
 
     res.status(201).json({
       success: true,
@@ -130,27 +130,45 @@ const getAllRecipes = async (req, res, next) => {
 
 const getRecipeById = async (req, res, next) => {
   try {
+    // Fetch recipe with basic population
     const recipe = await Recipe.findById(req.params.id)
       .populate('author', 'name avatar bio stats')
-      .populate('category', 'name')
-      .populate({
-        path: 'comments',
-        match: { parentComment: null, isDeleted: false },
-        populate: {
-          path: 'user',
-          select: 'name avatar',
-        },
-        options: { sort: { createdAt: -1 } },
-      });
+      .populate('category', 'name slug description');
 
     if (!recipe) {
       return next(new AppError('Recipe not found', 404));
     }
 
-    // Increment view count
-    await Recipe.findByIdAndUpdate(req.params.id, {
+    // Fetch comments separately (without virtual populate)
+    const comments = await Comment.find({ 
+      recipe: recipe._id, 
+      parentComment: null, 
+      isDeleted: false 
+    })
+      .populate('user', 'name avatar')
+      .sort({ createdAt: -1 });
+
+    // Fetch replies for comments
+    const commentsWithReplies = await Promise.all(
+      comments.map(async (comment) => {
+        const replies = await Comment.find({ 
+          parentComment: comment._id, 
+          isDeleted: false 
+        })
+          .populate('user', 'name avatar')
+          .sort({ createdAt: 1 });
+        
+        return {
+          ...comment.toObject(),
+          replies
+        };
+      })
+    );
+
+    // Increment view count (don't await to not block response)
+    Recipe.findByIdAndUpdate(req.params.id, {
       $inc: { 'stats.views': 1 }
-    });
+    }).catch(err => console.error('View increment error:', err));
 
     // Check if user has liked/bookmarked
     if (req.user) {
@@ -158,25 +176,28 @@ const getRecipeById = async (req, res, next) => {
         Like.exists({ user: req.user._id, recipe: recipe._id }),
         Bookmark.exists({ user: req.user._id, recipe: recipe._id }),
       ]);
-      recipe.isLiked = !!isLiked;
-      recipe.isBookmarked = !!isBookmarked;
+      recipe._doc.isLiked = !!isLiked;
+      recipe._doc.isBookmarked = !!isBookmarked;
     }
 
-    // Cache similar recipes
+    // Get similar recipes
     const similarRecipes = await Recipe.find({
       category: recipe.category,
       _id: { $ne: recipe._id },
       status: 'published',
     })
       .limit(5)
+      .select('title images cookingTime difficulty stats')
       .populate('author', 'name avatar');
 
     res.json({
       success: true,
       data: recipe,
+      comments: commentsWithReplies,
       similar: similarRecipes,
     });
   } catch (error) {
+    console.error('Get recipe error:', error);
     next(error);
   }
 };
@@ -213,9 +234,9 @@ const updateRecipe = async (req, res, next) => {
     );
 
     // Clear cache
-    await redisClient.del(`recipe_${req.params.id}`);
-    await redisClient.del('homepage_recipes');
-    await redisClient.del('trending_recipes');
+    // await redisClient.del(`recipe_${req.params.id}`);
+    // await redisClient.del('homepage_recipes');
+    // await redisClient.del('trending_recipes');
 
     res.json({
       success: true,
@@ -264,9 +285,9 @@ const deleteRecipe = async (req, res, next) => {
     ]);
 
     // Clear cache
-    await redisClient.del(`recipe_${req.params.id}`);
-    await redisClient.del('homepage_recipes');
-    await redisClient.del('trending_recipes');
+    // await redisClient.del(`recipe_${req.params.id}`);
+    // await redisClient.del('homepage_recipes');
+    // await redisClient.del('trending_recipes');
 
     res.json({
       success: true,
@@ -367,27 +388,58 @@ const addComment = async (req, res, next) => {
 
 const getComments = async (req, res, next) => {
   try {
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    // Get top-level comments (no parent)
     const comments = await Comment.find({
       recipe: req.params.id,
       parentComment: null,
-      isDeleted: false,
+      isDeleted: false
     })
       .populate('user', 'name avatar')
-      .populate({
-        path: 'replies',
-        match: { isDeleted: false },
-        populate: {
-          path: 'user',
-          select: 'name avatar',
-        },
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    // Get replies for each comment separately (not using populate)
+    const commentsWithReplies = await Promise.all(
+      comments.map(async (comment) => {
+        const replies = await Comment.find({
+          parentComment: comment._id,
+          isDeleted: false
+        })
+          .populate('user', 'name avatar')
+          .sort({ createdAt: 1 });
+        
+        const replyCount = replies.length;
+        
+        return {
+          ...comment.toObject(),
+          replies,
+          replyCount
+        };
       })
-      .sort({ createdAt: -1 });
+    );
+
+    const total = await Comment.countDocuments({
+      recipe: req.params.id,
+      parentComment: null,
+      isDeleted: false
+    });
 
     res.json({
       success: true,
-      data: comments,
+      data: commentsWithReplies,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / parseInt(limit))
+      }
     });
   } catch (error) {
+    console.error('Get comments error:', error);
     next(error);
   }
 };
@@ -395,13 +447,13 @@ const getComments = async (req, res, next) => {
 const getTrendingRecipes = async (req, res, next) => {
   try {
     // Check cache first
-    const cached = await redisClient.get('trending_recipes');
-    if (cached) {
-      return res.json({
-        success: true,
-        data: JSON.parse(cached),
-      });
-    }
+    // const cached = await redisClient.get('trending_recipes');
+    // if (cached) {
+    //   return res.json({
+    //     success: true,
+    //     data: JSON.parse(cached),
+    //   });
+    // }
 
     const recipes = await Recipe.find({ status: 'published' })
       .sort({ 'stats.views': -1, 'stats.likes': -1, createdAt: -1 })
@@ -410,7 +462,7 @@ const getTrendingRecipes = async (req, res, next) => {
       .populate('category', 'name');
 
     // Cache for 1 hour
-    await redisClient.setex('trending_recipes', 3600, JSON.stringify(recipes));
+    // await redisClient.set('trending_recipes', 3600, JSON.stringify(recipes));
 
     res.json({
       success: true,
@@ -424,13 +476,13 @@ const getTrendingRecipes = async (req, res, next) => {
 const getFeaturedRecipes = async (req, res, next) => {
   try {
     // Check cache
-    const cached = await redisClient.get('featured_recipes');
-    if (cached) {
-      return res.json({
-        success: true,
-        data: JSON.parse(cached),
-      });
-    }
+    // const cached = await redisClient.get('featured_recipes');
+    // if (cached) {
+    //   return res.json({
+    //     success: true,
+    //     data: JSON.parse(cached),
+    //   });
+    // }
 
     const recipes = await Recipe.find({ status: 'published' })
       .sort({ 'stats.likes': -1, createdAt: -1 })
@@ -438,7 +490,7 @@ const getFeaturedRecipes = async (req, res, next) => {
       .populate('author', 'name avatar')
       .populate('category', 'name');
 
-    await redisClient.setex('featured_recipes', 3600, JSON.stringify(recipes));
+    // await redisClient.set('featured_recipes', 3600, JSON.stringify(recipes));
 
     res.json({
       success: true,

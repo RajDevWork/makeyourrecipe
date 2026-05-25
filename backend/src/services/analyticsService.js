@@ -23,7 +23,7 @@ const getPopularRecipes = async (limit = 10) => {
     .limit(limit)
     .populate('author', 'name avatar');
 
-  await redisClient.setex('popular_recipes', 3600, JSON.stringify(recipes));
+  await redisClient.set('popular_recipes', 3600, JSON.stringify(recipes));
   return recipes;
 };
 

@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const ingredientSchema = new mongoose.Schema({
   name: { type: String, required: true },
   amount: { type: String, required: true },
-  unit: String
+  unit: String,
+  note: String
 });
 
 const stepSchema = new mongoose.Schema({
@@ -69,7 +70,8 @@ const recipeSchema = new mongoose.Schema({
     views: { type: Number, default: 0 },
     likes: { type: Number, default: 0 },
     saves: { type: Number, default: 0 },
-    shares: { type: Number, default: 0 }
+    shares: { type: Number, default: 0 },
+    comments: { type: Number, default: 0 }
   },
   seo: {
     slug: { type: String, unique: true },
@@ -77,11 +79,24 @@ const recipeSchema = new mongoose.Schema({
     metaDescription: String
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
+// Virtual populate for comments
+recipeSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'recipe',
+  options: { sort: { createdAt: -1 } }
+});
+
+// Indexes
 recipeSchema.index({ title: 'text', description: 'text', tags: 'text' });
 recipeSchema.index({ 'stats.views': -1 });
 recipeSchema.index({ createdAt: -1 });
+recipeSchema.index({ author: 1, createdAt: -1 });
+recipeSchema.index({ category: 1, status: 1 });
 
 module.exports = mongoose.model('Recipe', recipeSchema);
