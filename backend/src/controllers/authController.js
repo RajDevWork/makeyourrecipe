@@ -14,21 +14,23 @@ const register = async (req, res, next) => {
       return next(new AppError('Email already exists', 400));
     }
 
+    // console.log("Okay = ",name,email,password)
+
     const user = await User.create({ name, email, password });
     
     // Generate email verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    await redisClient.setex(`verify_${verificationToken}`, 86400, user._id.toString());
+    // await redisClient.setex(`verify_${verificationToken}`, 86400, user._id.toString());
     
     // Send verification email
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
-    await sendEmail(email, 'Verify your email', `Click here to verify: ${verificationUrl}`);
+    // const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    // await sendEmail(email, 'Verify your email', `Click here to verify: ${verificationUrl}`);
 
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
     // Store refresh token in Redis
-    await redisClient.setex(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
+    // await redisClient.setex(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
@@ -74,7 +76,7 @@ const login = async (req, res, next) => {
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
-    await redisClient.setex(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
+    // await redisClient.setex(`refresh_${user._id}`, 7 * 24 * 60 * 60, refreshToken);
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
@@ -138,7 +140,7 @@ const logout = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     if (accessToken) {
       // Blacklist the access token
-      await redisClient.setex(`blacklist_${accessToken}`, 900, 'true');
+      // await redisClient.setex(`blacklist_${accessToken}`, 900, 'true');
     }
     
     if (req.user) {

@@ -61,8 +61,17 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
-app.use(mongoSanitize());
-app.use(xss());
+// app.use(mongoSanitize());
+
+
+// app.use(mongoSanitize({
+//   replaceWith: '_',
+//   onSanitize: ({ req, key }) => {
+//     console.warn(`This request[${key}] is sanitized`);
+//   }
+// }));
+
+// app.use(xss());
 
 // Apply rate limiting to all routes
 app.use('/api', globalLimiter);
