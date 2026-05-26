@@ -1,8 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChefHat, Facebook, Twitter, Instagram, Github, Mail, Phone, MapPin } from 'lucide-react';
-
+import {
+  ChefHat,
+  FacebookIcon,
+  InstagramIcon,
+  GithubIcon,
+  Mail,
+  Phone,
+  MapPin,
+  AtSign,
+} from 'lucide-react';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -28,11 +36,22 @@ const Footer = () => {
   };
 
   const socialIcons = [
-    { icon: Facebook, href: 'https://facebook.com', color: 'hover:text-blue-600' },
-    { icon: Twitter, href: 'https://twitter.com', color: 'hover:text-blue-400' },
-    { icon: Instagram, href: 'https://instagram.com', color: 'hover:text-pink-600' },
-    { icon: Github, href: 'https://github.com', color: 'hover:text-gray-900 dark:hover:text-white' },
-  ];
+  {
+    icon: FacebookIcon,
+    href: 'https://facebook.com',
+    color: 'hover:text-blue-600',
+  },
+  {
+    icon: InstagramIcon,
+    href: 'https://instagram.com',
+    color: 'hover:text-pink-600',
+  },
+  {
+    icon: GithubIcon,
+    href: 'https://github.com',
+    color: 'hover:text-gray-900 dark:hover:text-white',
+  },
+];
 
   return (
     <footer className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800">
