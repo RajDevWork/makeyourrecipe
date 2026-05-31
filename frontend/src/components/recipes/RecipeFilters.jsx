@@ -59,7 +59,25 @@ const RecipeFilters = () => {
       <div className="lg:hidden mb-4">
         <button
           onClick={() => setIsOpen(true)}
-          className="w-full btn-secondary flex items-center justify-center gap-2"
+          className="
+            w-full
+            flex
+            items-center
+            justify-center
+            gap-2
+            rounded-2xl
+            border
+            border-orange-200
+            dark:border-orange-500/20
+            bg-white
+            dark:bg-slate-900
+            px-4
+            py-3
+            font-medium
+            text-slate-700
+            dark:text-slate-300
+            shadow-sm
+          "
         >
           <Filter className="w-4 h-4" />
           Filters {hasActiveFilters && '(Active)'}
@@ -72,15 +90,57 @@ const RecipeFilters = () => {
           <div className="absolute inset-0 bg-black/50" onClick={() => setIsOpen(false)} />
         )}
         
-        <div className={`relative bg-white dark:bg-gray-800 w-full max-w-sm h-full lg:h-auto lg:max-w-none overflow-y-auto p-6 ${isOpen ? 'fixed right-0 top-0' : 'lg:static'}`}>
-          <div className="flex items-center justify-between mb-6 lg:hidden">
-            <h3 className="text-xl font-semibold">Filters</h3>
-            <button onClick={() => setIsOpen(false)} className="p-2">
-              <X className="w-5 h-5" />
-            </button>
-          </div>
+        <div
+          className={`
+            relative
+            bg-white
+            dark:bg-slate-900
+            rounded-[32px]
+            border
+            border-slate-200
+            dark:border-slate-800
+            overflow-y-auto
+            p-6
+            shadow-sm
+            ${
+              isOpen
+                ? "fixed right-0 top-0 h-full w-full max-w-sm"
+                : "lg:static"
+            }
+          `}
+        >
+          <div className="mb-6">
+  <div className="flex items-center justify-between">
+    <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+      Filters
+    </h3>
 
-          <div className="space-y-4">
+    <button onClick={() => setIsOpen(false)} className="p-2 lg:hidden">
+      <X className="w-5 h-5" />
+    </button>
+  </div>
+
+  <div
+    className="
+      mt-3
+      inline-flex
+      items-center
+      rounded-full
+      bg-orange-100
+      dark:bg-orange-500/10
+      px-3
+      py-1
+      text-xs
+      font-medium
+      text-orange-600
+      dark:text-orange-400
+    "
+  >
+    🔍 Refine Your Search
+  </div>
+</div>
+
+          <div className="space-y-5">
             <Select
               label="Category"
               value={filters.category}
@@ -121,7 +181,22 @@ const RecipeFilters = () => {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-sm text-orange-500 hover:text-orange-600 mt-4"
+                className="
+                  w-full
+                  rounded-2xl
+                  border
+                  border-orange-200
+                  dark:border-orange-500/20
+                  bg-orange-50
+                  dark:bg-orange-500/10
+                  py-3
+                  text-sm
+                  font-semibold
+                  text-orange-600
+                  dark:text-orange-400
+                  transition-all
+                  hover:scale-[1.02]
+                "
               >
                 Clear all filters
               </button>

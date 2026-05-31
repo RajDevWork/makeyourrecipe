@@ -109,8 +109,8 @@ const Login = () => {
                 rounded-3xl
                 bg-gradient-to-r
                 from-orange-500
-                via-pink-500
-                to-purple-500
+        via-amber-500
+        to-rose-500
                 shadow-lg
                 shadow-orange-500/30
               "
@@ -254,8 +254,8 @@ const Login = () => {
                 rounded-2xl
                 bg-gradient-to-r
                 from-orange-500
-                via-pink-500
-                to-purple-500
+        via-amber-500
+        to-rose-500
                 py-4
                 font-semibold
                 text-white
@@ -279,16 +279,16 @@ const Login = () => {
           </form>
 
           {/* Divider */}
-          <div className="my-6 flex items-center">
+          {/* <div className="my-6 flex items-center">
             <div className="h-px flex-1 bg-white/10" />
             <span className="px-4 text-sm text-gray-500">
               or continue with
             </span>
             <div className="h-px flex-1 bg-white/10" />
-          </div>
+          </div> */}
 
           {/* Social Login */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* <div className="grid grid-cols-2 gap-3">
             <button
               className="
                 rounded-2xl
@@ -318,7 +318,7 @@ const Login = () => {
             >
               GitHub
             </button>
-          </div>
+          </div> */}
 
           {/* Register */}
           <p className="mt-8 text-center text-gray-400">

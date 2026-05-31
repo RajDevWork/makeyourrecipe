@@ -200,13 +200,13 @@ hover:after:w-full"
           {/* Right Section */}
           <div className="hidden md:flex items-center space-x-3">
             {/* Theme Toggle */}
-            <motion.button
+            {/* <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => dispatch(toggleDarkMode())}
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </motion.button>
+            </motion.button> */}
 
             {isAuthenticated ? (
               <>
@@ -256,7 +256,20 @@ hover:after:w-full"
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors"
+                  className="px-5
+py-2.5
+rounded-xl
+font-semibold
+text-white
+bg-gradient-to-r
+from-orange-500
+via-amber-500
+to-rose-500
+hover:scale-105
+transition-all
+duration-300
+shadow-lg
+shadow-orange-500/20"
                 >
                   Login
                 </Link>
