@@ -27,42 +27,124 @@ const Dashboard = () => {
   };
 
   if (!stats) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="loader"></div>
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <div className="container mx-auto px-4 py-8">
+
+        <div className="h-52 rounded-[40px] bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 animate-pulse mb-8" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="
+                h-32
+                rounded-[32px]
+                bg-white
+                dark:bg-slate-900
+                animate-pulse
+              "
+            />
+          ))}
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="container mx-auto px-4 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
+        className="relative overflow-hidden rounded-[40px] mb-10"
       >
-        <h1 className="text-3xl font-bold gradient-text">Dashboard</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Welcome back! Here's your cooking journey overview
-        </p>
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500" />
+
+        <div className="absolute inset-0 bg-black/10" />
+
+        <div className="relative z-10 px-8 py-14 md:px-12 text-white">
+
+          <h1 className="text-4xl md:text-6xl font-black">
+            Dashboard
+          </h1>
+
+          <p className="mt-4 text-lg text-white/90">
+            Welcome back! Here's your cooking journey overview.
+          </p>
+
+        </div>
       </motion.div>
 
-      <DashboardStats stats={stats} />
+      <div
+        className="
+          rounded-[32px]
+          border
+          border-slate-200
+          dark:border-slate-800
+          bg-white
+          dark:bg-slate-900
+          p-6
+          md:p-8
+        "
+      >
+        <DashboardStats stats={stats} />
+      </div>
 
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecipeChart data={chartData} title="Recipe Growth" />
-        <div className="glass-card p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="mt-8 grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-slate-200
+            dark:border-slate-800
+            bg-white
+            dark:bg-slate-900
+            p-6
+          "
+        >
+          <RecipeChart
+            data={chartData}
+            title="Recipe Growth"
+          />
+        </div>
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-slate-200
+            dark:border-slate-800
+            bg-white
+            dark:bg-slate-900
+            p-6
+          "
+        >
+          <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6">
             Recent Recipes
           </h3>
           <div className="space-y-3">
             {recentRecipes.map((recipe) => (
-              <div key={recipe._id} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div key={recipe._id} className=" flex
+  items-center
+  justify-between
+  rounded-2xl
+  border
+  border-slate-200
+  dark:border-slate-800
+  p-4">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-white">{recipe.title}</p>
-                  <p className="text-sm text-gray-500">{recipe.stats?.views || 0} views</p>
+                  <p className="font-semibold text-slate-900 dark:text-white">{recipe.title}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{recipe.stats?.views || 0} views</p>
                 </div>
-                <span className="text-sm text-orange-500">{recipe.createdAt}</span>
+                <span className=" rounded-full
+  bg-orange-100
+  dark:bg-orange-500/10
+  px-3
+  py-1
+  text-xs
+  font-medium
+  text-orange-600
+  dark:text-orange-400">{recipe.createdAt}</span>
               </div>
             ))}
           </div>
