@@ -198,7 +198,7 @@ hover:after:w-full"
           </div>
 
           {/* Right Section */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center space-x-4 md:ml-3">
             {/* Theme Toggle */}
             {/* <motion.button
               whileTap={{ scale: 0.9 }}
