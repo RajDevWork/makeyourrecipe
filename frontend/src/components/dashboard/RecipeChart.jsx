@@ -1,33 +1,107 @@
-import React from 'react';
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-const RecipeChart = ({ data, title, type = 'line' }) => {
-  const ChartComponent = type === 'line' ? LineChart : AreaChart;
-  const DataComponent = type === 'line' ? Line : Area;
+const RecipeChart = ({
+  data,
+  title,
+  type = "line",
+}) => {
+  const ChartComponent =
+    type === "line" ? LineChart : AreaChart;
+
+  const DataComponent =
+    type === "line" ? Line : Area;
 
   return (
-    <div className="glass-card p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={300}>
+    <div
+      className="
+        rounded-[32px]
+        border
+        border-slate-200
+        dark:border-slate-800
+        bg-white
+        dark:bg-slate-900
+        p-6
+      "
+    >
+      {/* Header */}
+      <div className="mb-6">
+        <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+          {title}
+        </h3>
+
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Track your recipe publishing growth over time
+        </p>
+      </div>
+
+      {/* Chart */}
+      <ResponsiveContainer width="100%" height={320}>
         <ChartComponent data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-          <XAxis dataKey="date" stroke="#9CA3AF" />
-          <YAxis stroke="#9CA3AF" />
+          <CartesianGrid
+            strokeDasharray="4 4"
+            stroke="#E2E8F0"
+          />
+
+          <XAxis
+            dataKey="date"
+            tick={{
+              fill: "#94A3B8",
+              fontSize: 12,
+            }}
+            axisLine={false}
+            tickLine={false}
+          />
+
+          <YAxis
+            tick={{
+              fill: "#94A3B8",
+              fontSize: 12,
+            }}
+            axisLine={false}
+            tickLine={false}
+          />
+
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1F2937',
-              border: 'none',
-              borderRadius: '8px',
-              color: '#fff',
+              background: "#fff",
+              border: "1px solid #E2E8F0",
+              borderRadius: "16px",
+              boxShadow:
+                "0 10px 25px rgba(0,0,0,0.08)",
+            }}
+            labelStyle={{
+              color: "#0F172A",
+              fontWeight: 600,
             }}
           />
+
           <DataComponent
             type="monotone"
             dataKey="count"
             stroke="#f97316"
             fill="#f97316"
-            fillOpacity={0.1}
-            strokeWidth={2}
+            fillOpacity={0.12}
+            strokeWidth={4}
+            dot={{
+              fill: "#f97316",
+              strokeWidth: 0,
+              r: 5,
+            }}
+            activeDot={{
+              r: 8,
+              fill: "#fb923c",
+            }}
           />
         </ChartComponent>
       </ResponsiveContainer>

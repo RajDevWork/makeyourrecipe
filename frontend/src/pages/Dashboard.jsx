@@ -28,8 +28,8 @@ const Dashboard = () => {
 
   if (!stats) {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-slate-950 dark:bg-slate-950">
+      <div className="mx-auto px-4 py-8">
 
         <div className="h-52 rounded-[40px] bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 animate-pulse mb-8" />
 
@@ -53,7 +53,7 @@ const Dashboard = () => {
 }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="mx-auto px-4 py-8 dark:bg-slate-950">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -105,7 +105,7 @@ const Dashboard = () => {
         >
           <RecipeChart
             data={chartData}
-            title="Recipe Growth"
+            title="Recipe Growth This Month"
           />
         </div>
         <div
@@ -144,7 +144,7 @@ const Dashboard = () => {
   text-xs
   font-medium
   text-orange-600
-  dark:text-orange-400">{recipe.createdAt}</span>
+  dark:text-orange-400">{new Date(recipe.createdAt).toLocaleDateString()}</span>
               </div>
             ))}
           </div>
