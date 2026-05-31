@@ -55,38 +55,106 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        scrolled
-          ? 'glass-card shadow-lg'
-          : 'bg-transparent'
-      }`}
-    >
+  className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+    scrolled
+        ? `
+          bg-white/80
+          dark:bg-slate-950/80
+          backdrop-blur-2xl
+          border-b
+          border-slate-200/50
+          dark:border-slate-800/50
+          shadow-[0_8px_30px_rgb(0,0,0,0.08)]
+        `
+        : 'bg-white dark:bg-slate-950'
+    }`}
+  >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <motion.div
-              whileHover={{ rotate: 180 }}
-              transition={{ duration: 0.5 }}
-            >
-              <ChefHat className="w-8 h-8 text-orange-500" />
-            </motion.div>
-            <span className="text-xl font-bold gradient-text">
-              RecipeBook
-            </span>
-          </Link>
+          <Link
+  to="/"
+  className="flex items-center gap-3 group"
+>
+  <motion.div
+    whileHover={{
+      rotate: 12,
+      scale: 1.05,
+    }}
+    className="
+      h-10
+      w-10
+      rounded-2xl
+      bg-gradient-to-br
+      from-orange-500
+      via-amber-500
+      to-rose-500
+      flex
+      items-center
+      justify-center
+      shadow-lg
+      shadow-orange-500/20
+    "
+  >
+    <ChefHat className="w-5 h-5 text-white" />
+  </motion.div>
+
+  <span
+    className="
+      text-2xl
+      font-black
+      bg-gradient-to-r
+      from-orange-500
+      via-amber-500
+      to-rose-500
+      bg-clip-text
+      text-transparent
+    "
+  >
+    RecipeBook
+  </span>
+</Link>
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <form onSubmit={handleSearch} className="w-full">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <div
+                  className="
+                    relative
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    dark:border-slate-700
+                    bg-white/70
+                    dark:bg-slate-900/70
+                    backdrop-blur-xl
+                    overflow-hidden
+                  "
+                >
+                <Search
+  className="
+    absolute
+    left-3
+    top-1/2
+    -translate-y-1/2
+    w-4
+    h-4
+    text-orange-500
+  "
+/>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search recipes..."
-                  className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
+                  className="w-full text-white dark:text-gray-300
+pl-10
+pr-4
+py-3
+bg-transparent
+outline-none
+text-sm
+placeholder:text-slate-400"
                 />
               </div>
             </form>
@@ -98,7 +166,20 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors duration-200 font-medium"
+                className="relative
+font-medium
+text-slate-700
+dark:text-slate-300
+hover:text-orange-500
+transition-colors
+after:absolute
+after:left-0
+after:-bottom-1
+after:h-[2px]
+after:w-0
+after:bg-orange-500
+after:transition-all
+hover:after:w-full"
               >
                 {link.name}
               </Link>
@@ -181,7 +262,20 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="btn-primary px-5 py-2 text-sm"
+                  className="px-5
+py-2.5
+rounded-xl
+font-semibold
+text-white
+bg-gradient-to-r
+from-orange-500
+via-amber-500
+to-rose-500
+hover:scale-105
+transition-all
+duration-300
+shadow-lg
+shadow-orange-500/20"
                 >
                   Sign Up
                 </Link>

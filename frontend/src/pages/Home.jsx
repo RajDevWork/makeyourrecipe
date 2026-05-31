@@ -55,288 +55,892 @@ const Home = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delayed"></div>
-        </div>
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-slate-950">
 
-        <div className="relative container mx-auto px-4 py-20 z-10">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="text-center max-w-5xl mx-auto"
-          >
-            <motion.div
-              variants={fadeInUp}
-              className="inline-flex items-center gap-2 bg-orange-100 dark:bg-orange-900/30 rounded-full px-4 py-2 mb-6"
-            >
-              <Sparkles className="w-4 h-4 text-orange-500" />
-              <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
-                Welcome to RecipeBook
-              </span>
-            </motion.div>
+  {/* Background */}
+  <div className="absolute inset-0">
 
-            <motion.h1 
-              variants={fadeInUp}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight"
-            >
-              <span className="gradient-text">Discover & Share</span>
-              <br />
-              <span className="text-gray-900 dark:text-white">Amazing Recipes</span>
-            </motion.h1>
+    <div className="absolute top-0 left-0 h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-[180px]" />
 
-            <motion.p 
-              variants={fadeInUp}
-              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto"
-            >
-              Join our community of food lovers and explore thousands of delicious recipes 
-              from around the world. Share your culinary creations and get inspired!
-            </motion.p>
+    <div className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-amber-500/10 blur-[180px]" />
 
-            <motion.div 
-              variants={fadeInUp}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <Link to="/explore" className="btn-primary group">
-                Explore Recipes
-                <ArrowRight className="w-5 h-5 inline ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link to="/create-recipe" className="btn-secondary">
-                Share Your Recipe
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
+    <div className="absolute inset-0 bg-gradient-to-b from-orange-50 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-900" />
+  </div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+  <div className="relative container mx-auto px-4 py-24 z-10">
+
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={staggerContainer}
+      className="max-w-5xl mx-auto text-center"
+    >
+
+      {/* Badge */}
+      <motion.div
+        variants={fadeInUp}
+        className="
+          inline-flex
+          items-center
+          gap-2
+          rounded-full
+          bg-orange-100
+          dark:bg-orange-500/10
+          px-4
+          py-2
+          text-orange-600
+          dark:text-orange-400
+          font-medium
+          mb-8
+        "
+      >
+        <Sparkles className="w-4 h-4" />
+        Welcome to RecipeBook
+      </motion.div>
+
+      {/* Heading */}
+      <motion.h1
+        variants={fadeInUp}
+        className="
+          text-5xl
+          md:text-7xl
+          lg:text-8xl
+          font-black
+          leading-[0.95]
+          tracking-tight
+          mb-8
+        "
+      >
+        <span className="bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent">
+          Discover &
+          <br />
+          Share
+        </span>
+
+        <br />
+
+        <span className="text-slate-900 dark:text-white">
+          Amazing Recipes
+        </span>
+      </motion.h1>
+
+      {/* Description */}
+      <motion.p
+        variants={fadeInUp}
+        className="
+          max-w-3xl
+          mx-auto
+          text-lg
+          md:text-xl
+          text-slate-600
+          dark:text-slate-400
+          leading-relaxed
+          mb-10
+        "
+      >
+        Join thousands of food lovers, discover delicious recipes,
+        save your favorites, and share your culinary creations
+        with the world.
+      </motion.p>
+
+      {/* Buttons */}
+      <motion.div
+        variants={fadeInUp}
+        className="flex flex-col sm:flex-row gap-4 justify-center"
+      >
+        <Link
+          to="/explore"
+          className="
+            inline-flex
+            items-center
+            justify-center
+            rounded-2xl
+            px-8
+            py-4
+            font-semibold
+            text-white
+            bg-gradient-to-r
+            from-orange-500
+            via-amber-500
+            to-rose-500
+            shadow-lg
+            shadow-orange-500/20
+            hover:scale-105
+            transition-all
+            duration-300
+          "
         >
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
-            <div className="w-1 h-2 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </motion.div>
-      </section>
+          Explore Recipes
+
+          <ArrowRight className="w-5 h-5 ml-2" />
+        </Link>
+
+        <Link
+          to="/create-recipe"
+          className="
+            inline-flex
+            items-center
+            justify-center
+            rounded-2xl
+            px-8
+            py-4
+            font-semibold
+            border
+            border-slate-200
+            dark:border-slate-700
+            bg-white
+            dark:bg-slate-900
+            text-slate-900
+            dark:text-white
+            hover:shadow-lg
+            transition-all
+          "
+        >
+          Share Your Recipe
+        </Link>
+      </motion.div>
+    </motion.div>
+  </div>
+
+  {/* Scroll Indicator */}
+  <motion.div
+    animate={{ y: [0, 10, 0] }}
+    transition={{
+      repeat: Infinity,
+      duration: 2,
+    }}
+    className="absolute bottom-8 left-1/2 -translate-x-1/2"
+  >
+    <div className="w-6 h-10 rounded-full border-2 border-orange-300 dark:border-orange-500/30 flex justify-center">
+      <div className="w-1 h-2 mt-2 rounded-full bg-orange-500 animate-pulse" />
+    </div>
+  </motion.div>
+
+</section>
 
       {/* Benefits Strip */}
-      <section className="py-16 bg-white/90 dark:bg-slate-950/75">
-        <div className="container mx-auto px-4">
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: 'Instant Inspiration',
-                description: 'Browse curated recipe ideas in seconds and never run out of dinner plans.',
-                icon: Zap,
-                accent: 'from-orange-400 to-pink-500'
-              },
-              {
-                title: 'Cook with Confidence',
-                description: 'Step-by-step recipes keep every meal easy, delicious, and stress-free.',
-                icon: Heart,
-                accent: 'from-cyan-400 to-blue-500'
-              },
-              {
-                title: 'Community Favorites',
-                description: 'Save, share, and discover trending dishes loved by home cooks.',
-                icon: Share2,
-                accent: 'from-violet-500 to-fuchsia-500'
-              }
-            ].map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="glass-card p-8 border border-white/40 dark:border-slate-700/40"
-              >
-                <div className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br ${item.accent} text-white shadow-xl shadow-orange-300/20`}>
-                  <item.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{item.title}</h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{item.description}</p>
-              </motion.div>
-            ))}
+      <section className="py-24 bg-gradient-to-b from-orange-50 via-white to-orange-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+  <div className="container mx-auto px-4">
+
+    <div className="text-center mb-16">
+      <span className="inline-flex items-center rounded-full bg-orange-100 dark:bg-orange-500/10 px-4 py-2 text-sm font-medium text-orange-600 dark:text-orange-400">
+        Why Choose RecipeBook
+      </span>
+
+      <h2 className="mt-5 text-4xl md:text-5xl font-black">
+        <span className="bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent">
+          Everything You Need
+        </span>
+      </h2>
+
+      <p className="mt-4 max-w-2xl mx-auto text-slate-600 dark:text-slate-400 text-lg">
+        Discover recipes, save your favorites, and become part of a growing food-loving community.
+      </p>
+    </div>
+
+    <div className="grid gap-8 md:grid-cols-3">
+
+      {[
+        {
+          title: "Instant Inspiration",
+          description:
+            "Browse curated recipe ideas in seconds and never run out of dinner plans.",
+          icon: Zap,
+        },
+        {
+          title: "Cook with Confidence",
+          description:
+            "Step-by-step recipes keep every meal easy, delicious, and stress-free.",
+          icon: Heart,
+        },
+        {
+          title: "Community Favorites",
+          description:
+            "Save, share, and discover trending dishes loved by home cooks.",
+          icon: Share2,
+        },
+      ].map((item, index) => (
+        <motion.div
+          key={item.title}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          viewport={{ once: true }}
+          whileHover={{
+            y: -8,
+          }}
+          className="
+            group
+            rounded-[32px]
+            border
+            border-orange-100
+            dark:border-slate-800
+            bg-white
+            dark:bg-slate-900
+            p-8
+            shadow-sm
+            hover:shadow-2xl
+            transition-all
+            duration-300
+          "
+        >
+          <div
+            className="
+              mb-6
+              flex
+              h-14
+              w-14
+              items-center
+              justify-center
+              rounded-2xl
+              bg-gradient-to-br
+              from-orange-500
+              via-amber-500
+              to-rose-500
+              text-white
+              shadow-lg
+              shadow-orange-500/20
+            "
+          >
+            <item.icon className="h-7 w-7" />
           </div>
-        </div>
-      </section>
+
+          <h3 className="mb-3 text-2xl font-bold text-slate-900 dark:text-white">
+            {item.title}
+          </h3>
+
+          <p className="leading-relaxed text-slate-600 dark:text-slate-400">
+            {item.description}
+          </p>
+
+          <div className="mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300 group-hover:w-24" />
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-white dark:bg-slate-900">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: ChefHat, label: 'Recipes', value: '10,000+', color: 'from-orange-500 to-red-500' },
-              { icon: Users, label: 'Active Chefs', value: '5,000+', color: 'from-cyan-500 to-blue-500' },
-              { icon: Clock, label: 'Minutes Saved', value: '1M+', color: 'from-emerald-500 to-teal-500' },
-              { icon: Star, label: '5-Star Ratings', value: '50K+', color: 'from-amber-400 to-orange-500' }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center group"
-              >
-                <div className="relative mb-4 inline-block">
-                  <div className={`absolute inset-0 bg-gradient-to-r ${stat.color} rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity`}></div>
-                  <div className="relative w-20 h-20 mx-auto bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <stat.icon className={`w-10 h-10 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`} />
-                  </div>
-                </div>
-                <div className="text-4xl font-bold text-slate-900 dark:text-white mb-2">{stat.value}</div>
-                <div className="text-slate-600 dark:text-slate-400">{stat.label}</div>
-              </motion.div>
-            ))}
+      <section className="py-24 bg-white dark:bg-slate-900">
+  <div className="container mx-auto px-4">
+
+    <div className="text-center mb-16">
+      <span
+        className="
+          inline-flex
+          items-center
+          rounded-full
+          bg-orange-100
+          dark:bg-orange-500/10
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-orange-600
+          dark:text-orange-400
+        "
+      >
+        Community Impact
+      </span>
+
+      <h2 className="mt-5 text-5xl md:text-6xl font-black">
+        <span className="bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent">
+          Trusted By Thousands
+        </span>
+      </h2>
+
+      <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
+        Join one of the fastest growing recipe communities.
+      </p>
+    </div>
+
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      {[
+        {
+          icon: ChefHat,
+          label: "Recipes",
+          value: "10,000+",
+        },
+        {
+          icon: Users,
+          label: "Active Chefs",
+          value: "5,000+",
+        },
+        {
+          icon: Clock,
+          label: "Minutes Saved",
+          value: "1M+",
+        },
+        {
+          icon: Star,
+          label: "5-Star Ratings",
+          value: "50K+",
+        },
+      ].map((stat, index) => (
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.4,
+            delay: index * 0.1,
+          }}
+          viewport={{ once: true }}
+          whileHover={{
+            y: -5,
+          }}
+          className="
+            rounded-[28px]
+            border
+            border-slate-200
+            dark:border-slate-800
+            bg-slate-50
+            dark:bg-slate-900
+            p-8
+            text-center
+            transition-all
+            duration-300
+            hover:shadow-xl
+          "
+        >
+          <div
+            className="
+              mx-auto
+              mb-5
+              flex
+              h-14
+              w-14
+              items-center
+              justify-center
+              rounded-2xl
+              bg-gradient-to-br
+              from-orange-500
+              via-amber-500
+              to-rose-500
+              text-white
+              shadow-lg
+              shadow-orange-500/20
+            "
+          >
+            <stat.icon className="h-7 w-7" />
           </div>
-        </div>
-      </section>
+
+          <h3
+            className="
+              text-4xl
+              md:text-5xl
+              font-black
+              bg-gradient-to-r
+              from-orange-500
+              via-amber-500
+              to-rose-500
+              bg-clip-text
+              text-transparent
+            "
+          >
+            {stat.value}
+          </h3>
+
+          <p className="mt-2 text-slate-600 dark:text-slate-400 font-medium">
+            {stat.label}
+          </p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* Categories Section */}
-      <section className="py-20 bg-gradient-to-br from-orange-50 to-pink-50 dark:from-gray-800 dark:to-gray-900">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">Popular Categories</span>
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              Explore recipes by category and find your next favorite dish
-            </p>
-          </motion.div>
+      <section className="py-24 bg-white dark:bg-slate-950">
+  <div className="container mx-auto px-4">
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {categories.slice(0, 8).map((category, index) => (
-              <CategoryCard key={category._id} category={category} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
+    {/* Heading */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-center mb-16"
+    >
+      <span
+        className="
+          inline-flex
+          items-center
+          rounded-full
+          bg-orange-100
+          dark:bg-orange-500/10
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-orange-600
+          dark:text-orange-400
+        "
+      >
+        Browse Categories
+      </span>
+
+      <h2 className="mt-5 text-5xl md:text-6xl font-black">
+        <span className="bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent">
+          Find Your Next Meal
+        </span>
+      </h2>
+
+      <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400">
+        Explore recipes by category and discover dishes you'll love to cook.
+      </p>
+    </motion.div>
+
+    {/* Category Wrapper */}
+    <div
+      className="
+        rounded-[40px]
+        border
+        border-slate-200
+        dark:border-slate-800
+        bg-slate-50
+        dark:bg-slate-900
+        p-6
+        md:p-10
+      "
+    >
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {categories.slice(0, 8).map((category, index) => (
+          <CategoryCard
+            key={category._id}
+            category={category}
+            index={index}
+          />
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* Featured Recipes */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="gradient-text">Featured Recipes</span>
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-              Hand-picked recipes from our top chefs that you'll love
-            </p>
-          </motion.div>
+      <section className="py-24 bg-white dark:bg-slate-950">
+  <div className="container mx-auto px-4">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredRecipes.map((recipe, index) => (
-              <RecipeCard key={recipe._id} recipe={recipe} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
+    {/* Heading */}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-center mb-16"
+    >
+      <span
+        className="
+          inline-flex
+          items-center
+          rounded-full
+          bg-orange-100
+          dark:bg-orange-500/10
+          px-4
+          py-2
+          text-sm
+          font-medium
+          text-orange-600
+          dark:text-orange-400
+        "
+      >
+        Chef's Picks
+      </span>
+
+      <h2 className="mt-5 text-5xl md:text-6xl font-black">
+        <span className="bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent">
+          Featured Recipes
+        </span>
+      </h2>
+
+      <p className="mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400">
+        Hand-picked recipes from our top chefs that you'll absolutely love.
+      </p>
+    </motion.div>
+
+    {/* Recipes Container */}
+    <div
+      className="
+        rounded-[40px]
+        border
+        border-slate-200
+        dark:border-slate-800
+        bg-slate-50
+        dark:bg-slate-900
+        p-6
+        md:p-10
+      "
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuredRecipes.map((recipe, index) => (
+          <RecipeCard
+            key={recipe._id}
+            recipe={recipe}
+            index={index}
+          />
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* Trending Recipes */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-2">
-                <span className="gradient-text">Trending Now</span>
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Most popular recipes this week
-              </p>
-            </div>
-            <Link to="/explore?sort=trending" className="flex items-center gap-2 text-orange-500 hover:text-orange-600 transition-colors">
-              View All
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+      <section className="py-24 bg-slate-50 dark:bg-slate-900">
+  <div className="container mx-auto px-4">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {trendingRecipes.map((recipe, index) => (
-              <RecipeCard key={recipe._id} recipe={recipe} index={index} variant="trending" />
-            ))}
-          </div>
-        </div>
-      </section>
+    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+
+      <div>
+        <span
+          className="
+            inline-flex
+            items-center
+            rounded-full
+            bg-orange-100
+            dark:bg-orange-500/10
+            px-4
+            py-2
+            text-sm
+            font-medium
+            text-orange-600
+            dark:text-orange-400
+          "
+        >
+          Trending This Week
+        </span>
+
+        <h2 className="mt-5 text-5xl md:text-6xl font-black">
+          <span className="bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent">
+            Trending Recipes
+          </span>
+        </h2>
+
+        <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
+          Discover what food lovers are cooking right now.
+        </p>
+      </div>
+
+      <Link
+        to="/explore?sort=trending"
+        className="
+          inline-flex
+          items-center
+          gap-2
+          font-semibold
+          text-orange-500
+          hover:text-orange-600
+          transition-colors
+        "
+      >
+        View All
+        <ArrowRight className="w-5 h-5" />
+      </Link>
+
+    </div>
+
+    {/* Recipes Wrapper */}
+    <div
+      className="
+        rounded-[40px]
+        border
+        border-slate-200
+        dark:border-slate-800
+        bg-white
+        dark:bg-slate-950
+        p-6
+        md:p-10
+      "
+    >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {trendingRecipes.map((recipe, index) => (
+          <RecipeCard
+            key={recipe._id}
+            recipe={recipe}
+            index={index}
+            variant="trending"
+          />
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-pink-500 text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Zap,
-                title: 'Quick & Easy',
-                description: 'Find recipes that fit your schedule with our quick and easy options'
-              },
-              {
-                icon: Heart,
-                title: 'Save Favorites',
-                description: 'Bookmark your favorite recipes and create your personal collection'
-              },
-              {
-                icon: Share2,
-                title: 'Share & Inspire',
-                description: 'Share your creations with the community and inspire others'
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center p-6 rounded-2xl bg-white/10 backdrop-blur-lg hover:bg-white/20 transition-all duration-300"
-              >
-                <feature.icon className="w-16 h-16 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-white/80">{feature.description}</p>
-              </motion.div>
-            ))}
+      <section className="relative py-28 overflow-hidden">
+
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 bg-cover bg-center"
+    style={{
+      backgroundImage:
+        "url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')",
+    }}
+  />
+
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black/65" />
+
+  {/* Gradient Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/70" />
+
+  <div className="container mx-auto px-4 relative z-10">
+
+    <div className="max-w-3xl mx-auto text-center mb-16">
+
+      <span
+        className="
+          inline-flex
+          items-center
+          rounded-full
+          bg-orange-500/15
+          px-4
+          py-2
+          text-orange-300
+          text-sm
+          font-medium
+          backdrop-blur-lg
+        "
+      >
+        Why Food Lovers Choose Us
+      </span>
+
+      <h2 className="mt-6 text-5xl md:text-6xl font-black text-white">
+        Cook Better,
+        <span className="block bg-gradient-to-r from-orange-400 via-amber-400 to-rose-400 bg-clip-text text-transparent">
+          Every Single Day
+        </span>
+      </h2>
+
+      <p className="mt-5 text-lg text-slate-300">
+        Discover recipes, save favorites, and become part of a thriving cooking community.
+      </p>
+    </div>
+
+    <div className="grid md:grid-cols-3 gap-8">
+
+      {[
+        {
+          icon: Zap,
+          title: "Quick & Easy",
+          description:
+            "Find recipes that perfectly fit your busy schedule.",
+        },
+        {
+          icon: Heart,
+          title: "Save Favorites",
+          description:
+            "Build your personal collection of must-try recipes.",
+        },
+        {
+          icon: Share2,
+          title: "Share & Inspire",
+          description:
+            "Showcase your creations and inspire home chefs.",
+        },
+      ].map((feature, index) => (
+        <motion.div
+          key={feature.title}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          viewport={{ once: true }}
+          whileHover={{
+            y: -8,
+          }}
+          className="
+            rounded-[32px]
+            border
+            border-white/10
+            bg-white/10
+            backdrop-blur-xl
+            p-8
+            text-center
+            transition-all
+            duration-300
+          "
+        >
+          <div
+            className="
+              mx-auto
+              mb-6
+              flex
+              h-16
+              w-16
+              items-center
+              justify-center
+              rounded-2xl
+              bg-gradient-to-br
+              from-orange-500
+              via-amber-500
+              to-rose-500
+              text-white
+            "
+          >
+            <feature.icon className="h-8 w-8" />
           </div>
-        </div>
-      </section>
+
+          <h3 className="text-2xl font-bold text-white mb-3">
+            {feature.title}
+          </h3>
+
+          <p className="text-slate-300 leading-relaxed">
+            {feature.description}
+          </p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* CTA Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-pink-600 opacity-90"></div>
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1490645935967-10de6ba17061')] bg-cover bg-center mix-blend-overlay opacity-20"></div>
-        
-        <div className="relative container mx-auto px-4 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+      <section className="py-28 bg-slate-50 dark:bg-slate-900">
+  <div className="container mx-auto px-4">
+
+    <div
+      className="
+        relative
+        overflow-hidden
+        rounded-[48px]
+        min-h-[550px]
+        flex
+        items-center
+        justify-center
+        shadow-2xl
+      "
+    >
+      {/* Background Image */}
+      <div
+        className="
+          absolute
+          inset-0
+          bg-cover
+          bg-center
+          scale-110
+        "
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=2070&auto=format&fit=crop')",
+        }}
+      />
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/70" />
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/70" />
+
+      {/* Floating Blur Effects */}
+      <div className="absolute top-10 left-10 h-48 w-48 rounded-full bg-orange-500/20 blur-[120px]" />
+      <div className="absolute bottom-10 right-10 h-48 w-48 rounded-full bg-amber-500/20 blur-[120px]" />
+
+      {/* Content */}
+      <div className="relative z-10 max-w-4xl px-6 text-center text-white">
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+
+          {/* Icon */}
+          <div
+            className="
+              mx-auto
+              mb-8
+              flex
+              h-20
+              w-20
+              items-center
+              justify-center
+              rounded-3xl
+              bg-gradient-to-br
+              from-orange-500
+              via-amber-500
+              to-rose-500
+              shadow-xl
+              shadow-orange-500/30
+            "
           >
-            <BookOpen className="w-20 h-20 mx-auto mb-6 animate-float" />
-            <h2 className="text-4xl md:text-6xl font-bold mb-4">
-              Ready to Share Your Culinary Creations?
-            </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Join thousands of food enthusiasts and showcase your recipes to the world
-            </p>
-            <Link to="/register" className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-3 rounded-xl font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <BookOpen className="h-10 w-10 text-white" />
+          </div>
+
+          {/* Heading */}
+          <h2 className="text-4xl md:text-6xl font-black leading-tight mb-6">
+            Ready to Share
+            <span className="block bg-gradient-to-r from-orange-400 via-amber-400 to-rose-400 bg-clip-text text-transparent">
+              Your Culinary Creations?
+            </span>
+          </h2>
+
+          {/* Description */}
+          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-10 leading-relaxed">
+            Join thousands of passionate food lovers, publish your favorite recipes,
+            and inspire home chefs around the world.
+          </p>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+
+            <Link
+              to="/register"
+              className="
+                inline-flex
+                items-center
+                justify-center
+                gap-2
+                rounded-2xl
+                bg-gradient-to-r
+                from-orange-500
+                via-amber-500
+                to-rose-500
+                px-8
+                py-4
+                font-semibold
+                text-white
+                shadow-xl
+                shadow-orange-500/30
+                hover:scale-105
+                transition-all
+                duration-300
+              "
+            >
               Get Started Today
               <ArrowRight className="w-5 h-5" />
             </Link>
-          </motion.div>
-        </div>
-      </section>
+
+            <Link
+              to="/explore"
+              className="
+                inline-flex
+                items-center
+                justify-center
+                rounded-2xl
+                border
+                border-white/20
+                bg-white/10
+                backdrop-blur-xl
+                px-8
+                py-4
+                font-semibold
+                text-white
+                hover:bg-white/20
+                transition-all
+                duration-300
+              "
+            >
+              Explore Recipes
+            </Link>
+
+          </div>
+
+        </motion.div>
+      </div>
+    </div>
+
+  </div>
+</section>
     </div>
   );
 };

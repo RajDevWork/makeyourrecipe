@@ -26,30 +26,30 @@ api.interceptors.request.use(
 );
 
 // Response interceptor
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+// api.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+//     if (error.response?.status === 401 && !originalRequest._retry) {
+//       originalRequest._retry = true;
 
-      try {
-        await api.post('/auth/refresh');
-        return api(originalRequest);
-      } catch (refreshError) {
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
-      }
-    }
+//       try {
+//         await api.post('/auth/refresh');
+//         return api(originalRequest);
+//       } catch (refreshError) {
+//         localStorage.removeItem('accessToken');
+//         window.location.href = '/login';
+//         return Promise.reject(refreshError);
+//       }
+//     }
 
-    if (error.response?.data?.message) {
-      toast.error(error.response.data.message);
-    }
+//     if (error.response?.data?.message) {
+//       toast.error(error.response.data.message);
+//     }
 
-    return Promise.reject(error);
-  }
-);
+//     return Promise.reject(error);
+//   }
+// );
 
 export default api;

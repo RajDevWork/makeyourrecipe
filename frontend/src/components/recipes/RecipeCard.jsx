@@ -117,7 +117,7 @@ const RecipeCard = ({ recipe, variant = 'default', index = 0 }) => {
       onClick={() => navigate(`/recipe/${recipe._id}`)}
       className="relative cursor-pointer"
     >
-      <div className="glass-card overflow-hidden group">
+      <div className="glass-card overflow-hidden group rounded-lg shadow-lg">
         {/* Image Container */}
         <div className="relative h-56 overflow-hidden">
           <motion.img
