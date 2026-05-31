@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { 
   Clock, Users, Star, Heart, Bookmark, Share2, Printer, 
-  ArrowLeft, ChefHat, Clock as ClockIcon, Facebook, Twitter, 
-  Linkedin, Link as LinkIcon, CheckCircle
+  ArrowLeft, ChefHat, Clock as ClockIcon, ExternalLink, Link as LinkIcon, CheckCircle
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill';
@@ -226,13 +225,13 @@ const RecipeDetails = () => {
               {showShareMenu && (
                 <div className="absolute top-full mt-2 left-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-2 z-20 min-w-[160px]">
                   <button onClick={() => handleShare('facebook')} className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center gap-2">
-                    <Facebook className="w-4 h-4 text-blue-600" /> Facebook
+                    <ExternalLink className="w-4 h-4 text-blue-600" /> Facebook
                   </button>
                   <button onClick={() => handleShare('twitter')} className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center gap-2">
-                    <Twitter className="w-4 h-4 text-blue-400" /> Twitter
+                    <ExternalLink className="w-4 h-4 text-sky-400" /> Twitter
                   </button>
                   <button onClick={() => handleShare('linkedin')} className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center gap-2">
-                    <Linkedin className="w-4 h-4 text-blue-700" /> LinkedIn
+                    <ExternalLink className="w-4 h-4 text-blue-700" /> LinkedIn
                   </button>
                   <button onClick={() => handleShare('copy')} className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg flex items-center gap-2">
                     <LinkIcon className="w-4 h-4" /> Copy Link

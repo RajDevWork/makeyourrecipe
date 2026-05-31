@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ChefHat,
-  FacebookIcon,
-  InstagramIcon,
-  GithubIcon,
   Mail,
   Phone,
   MapPin,
@@ -37,20 +34,10 @@ const Footer = () => {
 
   const socialIcons = [
   {
-    icon: FacebookIcon,
+    icon: ChefHat,
     href: 'https://facebook.com',
     color: 'hover:text-blue-600',
-  },
-  {
-    icon: InstagramIcon,
-    href: 'https://instagram.com',
-    color: 'hover:text-pink-600',
-  },
-  {
-    icon: GithubIcon,
-    href: 'https://github.com',
-    color: 'hover:text-gray-900 dark:hover:text-white',
-  },
+  }
 ];
 
   return (

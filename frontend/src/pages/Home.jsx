@@ -123,15 +123,58 @@ const Home = () => {
         </motion.div>
       </section>
 
+      {/* Benefits Strip */}
+      <section className="py-16 bg-white/90 dark:bg-slate-950/75">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                title: 'Instant Inspiration',
+                description: 'Browse curated recipe ideas in seconds and never run out of dinner plans.',
+                icon: Zap,
+                accent: 'from-orange-400 to-pink-500'
+              },
+              {
+                title: 'Cook with Confidence',
+                description: 'Step-by-step recipes keep every meal easy, delicious, and stress-free.',
+                icon: Heart,
+                accent: 'from-cyan-400 to-blue-500'
+              },
+              {
+                title: 'Community Favorites',
+                description: 'Save, share, and discover trending dishes loved by home cooks.',
+                icon: Share2,
+                accent: 'from-violet-500 to-fuchsia-500'
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="glass-card p-8 border border-white/40 dark:border-slate-700/40"
+              >
+                <div className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br ${item.accent} text-white shadow-xl shadow-orange-300/20`}>
+                  <item.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">{item.title}</h3>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{item.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Stats Section */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-20 bg-white dark:bg-slate-900">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { icon: ChefHat, label: 'Recipes', value: '10,000+', color: 'from-orange-500 to-red-500' },
-              { icon: Users, label: 'Active Chefs', value: '5,000+', color: 'from-blue-500 to-cyan-500' },
-              { icon: Clock, label: 'Minutes Saved', value: '1M+', color: 'from-green-500 to-emerald-500' },
-              { icon: Star, label: '5-Star Ratings', value: '50K+', color: 'from-yellow-500 to-orange-500' }
+              { icon: Users, label: 'Active Chefs', value: '5,000+', color: 'from-cyan-500 to-blue-500' },
+              { icon: Clock, label: 'Minutes Saved', value: '1M+', color: 'from-emerald-500 to-teal-500' },
+              { icon: Star, label: '5-Star Ratings', value: '50K+', color: 'from-amber-400 to-orange-500' }
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -143,12 +186,12 @@ const Home = () => {
               >
                 <div className="relative mb-4 inline-block">
                   <div className={`absolute inset-0 bg-gradient-to-r ${stat.color} rounded-full blur-xl opacity-20 group-hover:opacity-30 transition-opacity`}></div>
-                  <div className="relative w-20 h-20 mx-auto bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="relative w-20 h-20 mx-auto bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <stat.icon className={`w-10 h-10 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`} />
                   </div>
                 </div>
-                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</div>
-                <div className="text-gray-600 dark:text-gray-400">{stat.label}</div>
+                <div className="text-4xl font-bold text-slate-900 dark:text-white mb-2">{stat.value}</div>
+                <div className="text-slate-600 dark:text-slate-400">{stat.label}</div>
               </motion.div>
             ))}
           </div>
