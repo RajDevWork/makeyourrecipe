@@ -26,6 +26,67 @@ const Favorites = () => {
     }
   };
 
+  if (loading && favorites.length === 0) {
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <div className="container mx-auto px-4 py-8">
+
+        {/* Hero Skeleton */}
+        <div
+          className="
+            h-[220px]
+            rounded-[40px]
+            mb-10
+            animate-pulse
+            bg-gradient-to-r
+            from-slate-200
+            via-orange-100
+            to-slate-200
+            dark:from-slate-800
+            dark:via-slate-700
+            dark:to-slate-800
+          "
+        />
+
+        {/* Content Card Skeleton */}
+        <div
+          className="
+            rounded-[32px]
+            border
+            border-slate-200
+            dark:border-slate-800
+            bg-white
+            dark:bg-slate-900
+            p-8
+          "
+        >
+          {/* Header Skeleton */}
+          <div className="flex items-center justify-between mb-8">
+
+            <div>
+              <div className="h-8 w-52 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse mb-3" />
+
+              <div className="h-4 w-72 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse" />
+            </div>
+
+            <div className="h-10 w-32 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />
+          </div>
+
+          {/* Recipe Cards Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <div className="container mx-auto px-4 py-8">

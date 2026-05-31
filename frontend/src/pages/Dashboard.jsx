@@ -28,24 +28,109 @@ const Dashboard = () => {
 
   if (!stats) {
   return (
-    <div className="min-h-screen bg-slate-950 dark:bg-slate-950">
-      <div className="mx-auto px-4 py-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <div className="container mx-auto px-4 py-8">
 
-        <div className="h-52 rounded-[40px] bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 animate-pulse mb-8" />
+        {/* Hero Skeleton */}
+        <div
+          className="
+            h-[220px]
+            rounded-[40px]
+            mb-10
+            animate-pulse
+            bg-gradient-to-r
+            from-slate-200
+            via-orange-100
+            to-slate-200
+            dark:from-slate-800
+            dark:via-slate-700
+            dark:to-slate-800
+          "
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
               className="
-                h-32
-                rounded-[32px]
+                rounded-[28px]
+                border
+                border-slate-200
+                dark:border-slate-800
                 bg-white
                 dark:bg-slate-900
-                animate-pulse
+                p-6
               "
-            />
+            >
+              <div className="flex justify-between mb-6">
+
+                <div className="h-14 w-14 rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
+
+                <div className="h-10 w-20 rounded-lg bg-slate-200 dark:bg-slate-800 animate-pulse" />
+
+              </div>
+
+              <div className="h-4 w-32 rounded bg-slate-200 dark:bg-slate-800 animate-pulse" />
+            </div>
           ))}
+        </div>
+
+        {/* Bottom Cards Skeleton */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+
+          {/* Chart Skeleton */}
+          <div
+            className="
+              rounded-[32px]
+              border
+              border-slate-200
+              dark:border-slate-800
+              bg-white
+              dark:bg-slate-900
+              p-6
+            "
+          >
+            <div className="h-8 w-48 rounded bg-slate-200 dark:bg-slate-800 animate-pulse mb-3" />
+
+            <div className="h-4 w-72 rounded bg-slate-200 dark:bg-slate-800 animate-pulse mb-8" />
+
+            <div className="h-[300px] rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
+          </div>
+
+          {/* Recent Recipes Skeleton */}
+          <div
+            className="
+              rounded-[32px]
+              border
+              border-slate-200
+              dark:border-slate-800
+              bg-white
+              dark:bg-slate-900
+              p-6
+            "
+          >
+            <div className="h-8 w-48 rounded bg-slate-200 dark:bg-slate-800 animate-pulse mb-8" />
+
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="
+                  rounded-2xl
+                  border
+                  border-slate-200
+                  dark:border-slate-800
+                  p-4
+                  mb-4
+                "
+              >
+                <div className="h-5 w-40 rounded bg-slate-200 dark:bg-slate-800 animate-pulse mb-3" />
+
+                <div className="h-4 w-24 rounded bg-slate-200 dark:bg-slate-800 animate-pulse" />
+              </div>
+            ))}
+          </div>
+
         </div>
       </div>
     </div>
