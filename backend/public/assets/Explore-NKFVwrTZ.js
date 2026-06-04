@@ -1,4 +1,4 @@
-import{j as y,n as e,F as v,r as c,X as w,p as S}from"./index-CIU3cpb5.js";import{R as C}from"./RecipeCard-Bvncq3aq.js";import{c as A}from"./categoryService-2eKq3P7r.js";import{S as f}from"./SkeletonCard-FwewM8Dj.js";import{r as F}from"./recipeService-CDqM8tdv.js";import"./bookmark-BQTk9Rrf.js";import"./eye-B8VXfbnA.js";/**
+import{j as y,n as e,F as v,r as c,X as w,p as S}from"./index-BO43ITrN.js";import{R as C}from"./RecipeCard-bybBsQRc.js";import{c as A}from"./categoryService-DFZDrImI.js";import{S as f}from"./SkeletonCard-DW_nf5OL.js";import{r as F}from"./recipeService-rlqG3h8S.js";import"./bookmark-CDyrMyZL.js";import"./eye-CxdXcIvh.js";/**
  * @license lucide-react v1.16.0 - ISC
  *
  * This source code is licensed under the ISC license.
