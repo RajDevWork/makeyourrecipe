@@ -11,6 +11,9 @@ const CreateRecipe = () => {
 
   const handleSubmit = async (formData) => {
     try {
+
+
+      console.log("formData = ",formData);
       const response = await recipeService.createRecipe(formData);
 
       toast.success("Recipe created successfully!");
@@ -117,7 +120,7 @@ const CreateRecipe = () => {
               Fill in the information below to create and publish your recipe.
             </p>
 
-          </div>
+          </div> 
 
           <RecipeForm onSubmit={handleSubmit} />
         </motion.div>

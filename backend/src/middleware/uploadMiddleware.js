@@ -1,27 +1,32 @@
 const multer = require('multer');
-const AppError = require('../utils/AppError');
+const path = require('path');
 
+// Configure multer for memory storage
 const storage = multer.memoryStorage();
 
+// File filter for images only
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
-  const isValid = allowedTypes.test(file.mimetype);
-  
-  if (isValid) {
-    cb(null, true);
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
   } else {
-    cb(new AppError('Only image files are allowed', 400), false);
+    cb(new Error('Only image files are allowed!'), false);
   }
 };
 
+// Create multer instance
 const upload = multer({
-  storage,
-  fileFilter,
+  storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 5 * 1024 * 1024, // 5MB limit
   },
+  fileFilter: fileFilter,
 });
 
+// Export middleware
 const uploadMultiple = upload.array('images', 10);
 const uploadSingle = upload.single('image');
 

@@ -1,61 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Upload, X } from 'lucide-react';
-import Input from '../ui/Input';
-import Select from '../ui/Select';
-import Button from '../ui/Button';
-import { categoryService } from '../../services/categoryService';
-import { DIFFICULTY_LEVELS } from '../../utils/constants';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Trash2, Upload, X, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { categoryService } from '../../services/categoryService';
+import { recipeService } from '../../services/recipeService';
 
-const RecipeForm = ({ onSubmit, initialData, isEdit = false }) => {
+const RecipeForm = ({ initialData, isEdit = false }) => {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState({
-    title: initialData?.title || '',
-    description: initialData?.description || '',
-    category: initialData?.category?._id || '',
-    difficulty: initialData?.difficulty || 'medium',
-    servings: initialData?.servings || 4,
-    cookingTime: {
-      prep: initialData?.cookingTime?.prep || 0,
-      cook: initialData?.cookingTime?.cook || 0,
-      total: initialData?.cookingTime?.total || 0,
-    },
-    ingredients: initialData?.ingredients || [{ name: '', amount: '', unit: '' }],
-    steps: initialData?.steps || [{ order: 1, description: '' }],
-    tags: initialData?.tags?.join(', ') || '',
-    status: initialData?.status || 'published',
-    images: [],
-    existingImages: initialData?.images || [],
-  });
   const [loading, setLoading] = useState(false);
-  const [previewImages, setPreviewImages] = useState(initialData?.images || []);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    difficulty: 'medium',
+    servings: 4,
+    prepTime: 0,
+    cookTime: 0,
+    totalTime: 0,
+    ingredients: [{ name: '', amount: '', unit: '' }],
+    steps: [{ order: 1, description: '' }],
+    tags: '',
+    status: 'published',
+  });
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+    if (initialData) {
+      loadInitialData();
+    }
+  }, [initialData]);
 
   const fetchCategories = async () => {
     try {
       const response = await categoryService.getAllCategories();
       setCategories(response.data || []);
     } catch (error) {
-      toast.error('Failed to load categories');
+      console.error('Error fetching categories:', error);
     }
+  };
+
+  const loadInitialData = () => {
+    setFormData({
+      title: initialData.title || '',
+      description: initialData.description || '',
+      category: initialData.category?._id || initialData.category || '',
+      difficulty: initialData.difficulty || 'medium',
+      servings: initialData.servings || 4,
+      prepTime: initialData.cookingTime?.prep || 0,
+      cookTime: initialData.cookingTime?.cook || 0,
+      totalTime: initialData.cookingTime?.total || 0,
+      ingredients: initialData.ingredients?.length ? initialData.ingredients : [{ name: '', amount: '', unit: '' }],
+      steps: initialData.steps?.length ? initialData.steps : [{ order: 1, description: '' }],
+      tags: initialData.tags?.join(', ') || '',
+      status: initialData.status || 'published',
+    });
+    if (initialData.images?.length) {
+      setImagePreviews(initialData.images);
+    }
+  };
+
+  const calculateTotalTime = (prep, cook) => {
+    const prepNum = parseInt(prep) || 0;
+    const cookNum = parseInt(cook) || 0;
+    return prepNum + cookNum;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: { ...prev[parent], [child]: value },
-        cookingTime: {
-          ...prev.cookingTime,
-          total: parent === 'cookingTime' && child === 'prep' || child === 'cook'
-            ? (child === 'prep' ? parseInt(value) + (prev.cookingTime.cook || 0) : (prev.cookingTime.prep || 0) + parseInt(value))
-            : prev.cookingTime.total
-        }
+    
+    if (name === 'prepTime') {
+      const prep = parseInt(value) || 0;
+      setFormData(prev => ({ 
+        ...prev, 
+        prepTime: prep,
+        totalTime: calculateTotalTime(prep, prev.cookTime)
+      }));
+    } else if (name === 'cookTime') {
+      const cook = parseInt(value) || 0;
+      setFormData(prev => ({ 
+        ...prev, 
+        cookTime: cook,
+        totalTime: calculateTotalTime(prev.prepTime, cook)
       }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -77,135 +104,298 @@ const RecipeForm = ({ onSubmit, initialData, isEdit = false }) => {
 
   const removeArrayItem = (arrayName, index) => {
     const newArray = formData[arrayName].filter((_, i) => i !== index);
+    if (arrayName === 'steps') {
+      newArray.forEach((step, idx) => {
+        step.order = idx + 1;
+      });
+    }
     setFormData(prev => ({ ...prev, [arrayName]: newArray }));
   };
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = [...previewImages];
-    const newFormImages = [...(formData.images || [])];
-    
-    files.forEach(file => {
-      const url = URL.createObjectURL(file);
-      newImages.push(url);
-      newFormImages.push(file);
-    });
-    
-    setPreviewImages(newImages);
-    setFormData(prev => ({ ...prev, images: newFormImages }));
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(prev => [...prev, ...newPreviews]);
+    setFormData(prev => ({ ...prev, newImages: [...(prev.newImages || []), ...files] }));
   };
 
   const removeImage = (index) => {
-    setPreviewImages(prev => prev.filter((_, i) => i !== index));
-    setFormData(prev => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-      existingImages: prev.existingImages.filter((_, i) => i !== index)
-    }));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+    if (formData.newImages) {
+      const newImages = formData.newImages.filter((_, i) => i !== index);
+      setFormData(prev => ({ ...prev, newImages }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    const submitData = new FormData();
-    submitData.append('title', formData.title);
-    submitData.append('description', formData.description);
-    submitData.append('category', formData.category);
-    submitData.append('difficulty', formData.difficulty);
-    submitData.append('servings', formData.servings);
-    submitData.append('cookingTime[prep]', formData.cookingTime.prep);
-    submitData.append('cookingTime[cook]', formData.cookingTime.cook);
-    submitData.append('cookingTime[total]', formData.cookingTime.total);
-    submitData.append('tags', formData.tags.split(',').map(t => t.trim()));
-    submitData.append('status', formData.status);
-    
-    formData.ingredients.forEach((ing, idx) => {
-      submitData.append(`ingredients[${idx}][name]`, ing.name);
-      submitData.append(`ingredients[${idx}][amount]`, ing.amount);
-      submitData.append(`ingredients[${idx}][unit]`, ing.unit);
-    });
-    
-    formData.steps.forEach((step, idx) => {
-      submitData.append(`steps[${idx}][order]`, step.order);
-      submitData.append(`steps[${idx}][description]`, step.description);
-    });
-    
-    formData.images.forEach((image, idx) => {
-      submitData.append('images', image);
-    });
-    
-    await onSubmit(submitData);
-    setLoading(false);
+
+    try {
+      // Filter out empty ingredients and steps
+      const validIngredients = formData.ingredients.filter(ing => ing.name.trim() !== '');
+      const validSteps = formData.steps.filter(step => step.description.trim() !== '');
+      
+      // Create FormData
+      const submitData = new FormData();
+      
+      // Basic fields
+      submitData.append('title', formData.title);
+      submitData.append('description', formData.description);
+      submitData.append('category', formData.category);
+      submitData.append('difficulty', formData.difficulty);
+      submitData.append('servings', formData.servings.toString());
+      submitData.append('status', formData.status);
+      
+      // Cooking time - send as individual fields
+      submitData.append('cookingTime[prep]', formData.prepTime.toString());
+      submitData.append('cookingTime[cook]', formData.cookTime.toString());
+      submitData.append('cookingTime[total]', formData.totalTime.toString());
+      
+      // Tags - send as array
+      const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+      tagsArray.forEach(tag => {
+        submitData.append('tags[]', tag);
+      });
+      
+      // Ingredients - send as array of objects (using dot notation)
+      validIngredients.forEach((ingredient, index) => {
+        submitData.append(`ingredients[${index}][name]`, ingredient.name);
+        submitData.append(`ingredients[${index}][amount]`, ingredient.amount);
+        submitData.append(`ingredients[${index}][unit]`, ingredient.unit || '');
+      });
+      
+      // Steps - send as array of objects (using dot notation)
+      validSteps.forEach((step, index) => {
+        submitData.append(`steps[${index}][order]`, step.order.toString());
+        submitData.append(`steps[${index}][description]`, step.description);
+      });
+      
+      // Images
+      if (formData.newImages && formData.newImages.length > 0) {
+        formData.newImages.forEach((image) => {
+          submitData.append('images', image);
+        });
+      }
+      
+      // For edit mode, send existing images to keep
+      if (isEdit && imagePreviews.length > 0 && !formData.newImages) {
+        submitData.append('existingImages', JSON.stringify(imagePreviews));
+      }
+      
+      let response;
+      if (isEdit && initialData?._id) {
+        response = await recipeService.updateRecipe(initialData._id, submitData);
+        toast.success('Recipe updated successfully!');
+      } else {
+        response = await recipeService.createRecipe(submitData);
+        toast.success('Recipe created successfully!');
+      }
+      
+      navigate(`/recipe/${response.data._id}`);
+    } catch (error) {
+      console.error('Error saving recipe:', error);
+      toast.error(error.response?.data?.message || 'Failed to save recipe');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const addStep = () => {
+    addArrayItem('steps', { order: formData.steps.length + 1, description: '' });
+  };
+
+  const addIngredient = () => {
+    addArrayItem('ingredients', { name: '', amount: '', unit: '' });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Basic Info */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Basic Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="Recipe Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-          <Select
-            label="Category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            options={categories.map(c => ({ value: c._id, label: c.name }))}
-            required
-          />
-          <Select
-            label="Difficulty"
-            name="difficulty"
-            value={formData.difficulty}
-            onChange={handleChange}
-            options={DIFFICULTY_LEVELS}
-          />
-          <Input
-            label="Servings"
-            name="servings"
-            type="number"
-            value={formData.servings}
-            onChange={handleChange}
-            min="1"
-          />
-          <Input
-            label="Prep Time (minutes)"
-            name="cookingTime.prep"
-            type="number"
-            value={formData.cookingTime.prep}
-            onChange={handleChange}
-          />
-          <Input
-            label="Cook Time (minutes)"
-            name="cookingTime.cook"
-            type="number"
-            value={formData.cookingTime.cook}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="mt-4">
-          <Input
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            as="textarea"
-            rows="4"
-          />
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Basic Information Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+          Basic Information
+        </h3>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Recipe Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              placeholder="e.g., Classic Spaghetti Carbonara"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              rows="4"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
+              placeholder="Describe your recipe..."
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Category <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              >
+                <option value="">Select Category</option>
+                {categories.map(cat => (
+                  <option key={cat._id} value={cat._id}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Difficulty Level
+              </label>
+              <select
+                name="difficulty"
+                value={formData.difficulty}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              >
+                <option value="easy">Easy - Beginner Friendly</option>
+                <option value="medium">Medium - Some Experience</option>
+                <option value="hard">Hard - Advanced Skills</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Servings
+              </label>
+              <input
+                type="number"
+                name="servings"
+                value={formData.servings}
+                onChange={handleChange}
+                min="1"
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              >
+                <option value="draft">Draft - Save for later</option>
+                <option value="published">Published - Share with everyone</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Images */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recipe Images</h3>
-        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center">
+      {/* Cooking Time Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700 flex items-center gap-2">
+          <Clock className="w-5 h-5 text-orange-500" />
+          Cooking Time
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Prep Time (minutes)
+            </label>
+            <input
+              type="number"
+              name="prepTime"
+              value={formData.prepTime}
+              onChange={handleChange}
+              min="0"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              placeholder="e.g., 15"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Cook Time (minutes)
+            </label>
+            <input
+              type="number"
+              name="cookTime"
+              value={formData.cookTime}
+              onChange={handleChange}
+              min="0"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              placeholder="e.g., 30"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Total Time (minutes)
+            </label>
+            <input
+              type="number"
+              value={formData.totalTime}
+              disabled
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+              placeholder="Auto-calculated"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Images Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+          Recipe Images
+        </h3>
+        
+        {imagePreviews.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            {imagePreviews.map((img, idx) => (
+              <div key={idx} className="relative group">
+                <img 
+                  src={typeof img === 'string' ? img : URL.createObjectURL(img)} 
+                  alt={`Preview ${idx + 1}`} 
+                  className="w-full h-32 object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeImage(idx)}
+                  className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-orange-500 transition-colors">
           <input
             type="file"
             accept="image/*"
@@ -220,127 +410,144 @@ const RecipeForm = ({ onSubmit, initialData, isEdit = false }) => {
           >
             <Upload className="w-12 h-12 text-gray-400" />
             <span className="text-gray-600 dark:text-gray-400">Click to upload images</span>
+            <span className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</span>
           </label>
         </div>
-        {previewImages.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            {previewImages.map((img, idx) => (
-              <div key={idx} className="relative group">
-                <img src={img} alt={`Preview ${idx}`} className="w-full h-32 object-cover rounded-lg" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(idx)}
-                  className="absolute top-2 right-2 p-1 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <X className="w-4 h-4 text-white" />
-                </button>
+      </div>
+
+      {/* Ingredients Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Ingredients</h3>
+          <button
+            type="button"
+            onClick={addIngredient}
+            className="px-3 py-1.5 text-sm bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition flex items-center gap-1"
+          >
+            <Plus className="w-4 h-4" /> Add Ingredient
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {formData.ingredients.map((ingredient, idx) => (
+            <div key={idx} className="flex gap-3 items-start">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  placeholder="Ingredient name"
+                  value={ingredient.name}
+                  onChange={(e) => handleArrayChange('ingredients', idx, 'name', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                />
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Ingredients */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Ingredients</h3>
-        {formData.ingredients.map((ingredient, idx) => (
-          <div key={idx} className="flex gap-3 mb-3">
-            <Input
-              placeholder="Ingredient name"
-              value={ingredient.name}
-              onChange={(e) => handleArrayChange('ingredients', idx, 'name', e.target.value)}
-              className="flex-2"
-            />
-            <Input
-              placeholder="Amount"
-              value={ingredient.amount}
-              onChange={(e) => handleArrayChange('ingredients', idx, 'amount', e.target.value)}
-              className="flex-1"
-            />
-            <Input
-              placeholder="Unit"
-              value={ingredient.unit}
-              onChange={(e) => handleArrayChange('ingredients', idx, 'unit', e.target.value)}
-              className="flex-1"
-            />
-            <button
-              type="button"
-              onClick={() => removeArrayItem('ingredients', idx)}
-              className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => addArrayItem('ingredients', { name: '', amount: '', unit: '' })}
-          className="text-orange-500 hover:text-orange-600 text-sm font-medium flex items-center gap-1"
-        >
-          <Plus className="w-4 h-4" /> Add Ingredient
-        </button>
-      </div>
-
-      {/* Steps */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Instructions</h3>
-        {formData.steps.map((step, idx) => (
-          <div key={idx} className="flex gap-3 mb-3">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 flex items-center justify-center font-semibold">
-              {step.order}
+              <div className="w-32">
+                <input
+                  type="text"
+                  placeholder="Amount"
+                  value={ingredient.amount}
+                  onChange={(e) => handleArrayChange('ingredients', idx, 'amount', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                />
+              </div>
+              <div className="w-32">
+                <input
+                  type="text"
+                  placeholder="Unit"
+                  value={ingredient.unit}
+                  onChange={(e) => handleArrayChange('ingredients', idx, 'unit', e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeArrayItem('ingredients', idx)}
+                className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                disabled={formData.ingredients.length === 1}
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
             </div>
-            <Input
-              placeholder="Step description"
-              value={step.description}
-              onChange={(e) => handleArrayChange('steps', idx, 'description', e.target.value)}
-              className="flex-1"
-            />
-            <button
-              type="button"
-              onClick={() => removeArrayItem('steps', idx)}
-              className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* Instructions Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Instructions</h3>
+          <button
+            type="button"
+            onClick={addStep}
+            className="px-3 py-1.5 text-sm bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition flex items-center gap-1"
+          >
+            <Plus className="w-4 h-4" /> Add Step
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {formData.steps.map((step, idx) => (
+            <div key={idx} className="flex gap-3 items-start">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center font-semibold">
+                {step.order}
+              </div>
+              <div className="flex-1">
+                <textarea
+                  placeholder={`Step ${step.order} description...`}
+                  value={step.description}
+                  onChange={(e) => handleArrayChange('steps', idx, 'description', e.target.value)}
+                  rows="2"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removeArrayItem('steps', idx)}
+                className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
+                disabled={formData.steps.length === 1}
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tags Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+          Tags
+        </h3>
+        
+        <div>
+          <input
+            type="text"
+            name="tags"
+            value={formData.tags}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+            placeholder="e.g., Italian, Pasta, Quick, Healthy"
+          />
+          <p className="text-xs text-gray-500 mt-1">Separate tags with commas for better discoverability</p>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-4 pt-4">
         <button
           type="button"
-          onClick={() => addArrayItem('steps', { order: formData.steps.length + 1, description: '' })}
-          className="text-orange-500 hover:text-orange-600 text-sm font-medium flex items-center gap-1"
+          onClick={() => navigate(-1)}
+          className="flex-1 px-6 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition"
         >
-          <Plus className="w-4 h-4" /> Add Step
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/25 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Saving...' : (isEdit ? 'Update Recipe' : 'Create Recipe')}
         </button>
       </div>
-
-      {/* Tags */}
-      <div>
-        <Input
-          label="Tags (comma-separated)"
-          name="tags"
-          value={formData.tags}
-          onChange={handleChange}
-          placeholder="e.g., pasta, italian, dinner"
-        />
-      </div>
-
-      {/* Status */}
-      <div>
-        <Select
-          label="Status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          options={[
-            { value: 'draft', label: 'Draft' },
-            { value: 'published', label: 'Published' },
-          ]}
-        />
-      </div>
-
-      <Button type="submit" loading={loading} className="w-full">
-        {isEdit ? 'Update Recipe' : 'Create Recipe'}
-      </Button>
     </form>
   );
 };

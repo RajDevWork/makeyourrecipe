@@ -11,55 +11,68 @@ export const recipeService = {
     return response.data;
   },
 
+  // createRecipe: async (recipeData) => {
+  //   const formData = new FormData();
+  //   Object.keys(recipeData).forEach(key => {
+  //     if (key === 'images' && recipeData.images) {
+  //       Array.from(recipeData.images).forEach(file => {
+  //         formData.append('images', file);
+  //       });
+  //     } else if (typeof recipeData[key] === 'object' && recipeData[key] !== null) {
+  //       if (key === 'ingredients' || key === 'steps' || key === 'tags') {
+  //         formData.append(key, JSON.stringify(recipeData[key]));
+  //       } else {
+  //         Object.keys(recipeData[key]).forEach(subKey => {
+  //           formData.append(`${key}[${subKey}]`, recipeData[key][subKey]);
+  //         });
+  //       }
+  //     } else {
+  //       formData.append(key, recipeData[key]);
+  //     }
+  //   });
+  //   console.log("formData ====> ",formData)
+  //   const response = await api.post('/recipes', formData, {
+  //     headers: { 'Content-Type': 'multipart/form-data' },
+  //   });
+  //   return response.data;
+  // },
   createRecipe: async (recipeData) => {
-    const formData = new FormData();
-    Object.keys(recipeData).forEach(key => {
-      if (key === 'images' && recipeData.images) {
-        Array.from(recipeData.images).forEach(file => {
-          formData.append('images', file);
-        });
-      } else if (typeof recipeData[key] === 'object' && recipeData[key] !== null) {
-        if (key === 'ingredients' || key === 'steps' || key === 'tags') {
-          formData.append(key, JSON.stringify(recipeData[key]));
-        } else {
-          Object.keys(recipeData[key]).forEach(subKey => {
-            formData.append(`${key}[${subKey}]`, recipeData[key][subKey]);
-          });
-        }
-      } else {
-        formData.append(key, recipeData[key]);
-      }
-    });
-    
-    const response = await api.post('/recipes', formData, {
+    // recipeData is already FormData, just send it
+    const response = await api.post('/recipes', recipeData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
   },
 
-  updateRecipe: async (id, recipeData) => {
-    const formData = new FormData();
-    Object.keys(recipeData).forEach(key => {
-      if (key === 'newImages' && recipeData.newImages) {
-        Array.from(recipeData.newImages).forEach(file => {
-          formData.append('images', file);
-        });
-      } else if (key === 'imagesToDelete') {
-        formData.append('imagesToDelete', JSON.stringify(recipeData.imagesToDelete));
-      } else if (typeof recipeData[key] === 'object' && recipeData[key] !== null) {
-        if (key === 'ingredients' || key === 'steps' || key === 'tags') {
-          formData.append(key, JSON.stringify(recipeData[key]));
-        } else {
-          Object.keys(recipeData[key]).forEach(subKey => {
-            formData.append(`${key}[${subKey}]`, recipeData[key][subKey]);
-          });
-        }
-      } else if (key !== 'images') {
-        formData.append(key, recipeData[key]);
-      }
-    });
+  // updateRecipe: async (id, recipeData) => {
+  //   const formData = new FormData();
+  //   Object.keys(recipeData).forEach(key => {
+  //     if (key === 'newImages' && recipeData.newImages) {
+  //       Array.from(recipeData.newImages).forEach(file => {
+  //         formData.append('images', file);
+  //       });
+  //     } else if (key === 'imagesToDelete') {
+  //       formData.append('imagesToDelete', JSON.stringify(recipeData.imagesToDelete));
+  //     } else if (typeof recipeData[key] === 'object' && recipeData[key] !== null) {
+  //       if (key === 'ingredients' || key === 'steps' || key === 'tags') {
+  //         formData.append(key, JSON.stringify(recipeData[key]));
+  //       } else {
+  //         Object.keys(recipeData[key]).forEach(subKey => {
+  //           formData.append(`${key}[${subKey}]`, recipeData[key][subKey]);
+  //         });
+  //       }
+  //     } else if (key !== 'images') {
+  //       formData.append(key, recipeData[key]);
+  //     }
+  //   });
     
-    const response = await api.put(`/recipes/${id}`, formData, {
+  //   const response = await api.put(`/recipes/${id}`, formData, {
+  //     headers: { 'Content-Type': 'multipart/form-data' },
+  //   });
+  //   return response.data;
+  // },
+  updateRecipe: async (id, recipeData) => {
+    const response = await api.put(`/recipes/${id}`, recipeData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;

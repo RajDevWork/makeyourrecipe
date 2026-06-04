@@ -7,49 +7,94 @@ const AppError = require('../utils/AppError');
 const { redisClient } = require('../config/redis');
 const cloudinary = require('../config/cloudinary');
 const { createNotification } = require('../services/notificationService');
+const stream = require('stream');
+
+// Helper function to upload buffer to Cloudinary
+const uploadToCloudinary = (buffer, folder = 'reactiveRecipes') => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: folder+'/recipes',
+        transformation: [{ width: 800, height: 600, crop: 'limit' }],
+        quality: 'auto',
+      },
+      (error, result) => {
+        if (error) {
+          console.error('Cloudinary upload error:', error);
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+
+    // Create a readable stream from buffer and pipe to Cloudinary
+    const readableStream = new stream.Readable();
+    readableStream.push(buffer);
+    readableStream.push(null);
+    readableStream.pipe(uploadStream);
+  });
+};
 
 const createRecipe = async (req, res, next) => {
   try {
-    const recipeData = {
-      ...req.body,
-      author: req.user._id,
-    };
+    console.log('Request body:', req.body);
+    console.log('Request files:', req.files);
 
-    // Process images
-    if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file => 
-        cloudinary.uploader.upload(file.path, {
-          folder: 'recipes',
-          transformation: [{ width: 800, height: 600, crop: 'limit' }]
-        })
-      );
-      const uploadedImages = await Promise.all(uploadPromises);
-      recipeData.images = uploadedImages.map(img => img.secure_url);
+    // Parse JSON fields
+    let ingredients = [];
+    let steps = [];
+    let tags = [];
+
+    try {
+      ingredients = req.body.ingredients ? JSON.parse(req.body.ingredients) : [];
+      steps = req.body.steps ? JSON.parse(req.body.steps) : [];
+      tags = req.body.tags ? JSON.parse(req.body.tags) : [];
+    } catch (e) {
+      console.error('Parse error:', e);
     }
 
-    // Generate SEO slug
-    recipeData.seo = {
-      slug: req.body.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      metaTitle: req.body.title,
-      metaDescription: req.body.description.substring(0, 160),
+    // Prepare recipe data
+    const recipeData = {
+      title: req.body.title,
+      description: req.body.description,
+      category: req.body.category,
+      difficulty: req.body.difficulty || 'medium',
+      servings: parseInt(req.body.servings) || 4,
+      author: req.user._id,
+      ingredients: ingredients,
+      steps: steps,
+      tags: tags,
+      status: req.body.status || 'published',
+      cookingTime: {
+        prep: parseInt(req.body['cookingTime[prep]']) || 0,
+        cook: parseInt(req.body['cookingTime[cook]']) || 0,
+        total: parseInt(req.body['cookingTime[total]']) || 0,
+      },
+      seo: {
+        slug: req.body.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        metaTitle: req.body.title,
+        metaDescription: req.body.description?.substring(0, 160),
+      },
     };
 
+    // Upload images to Cloudinary
+    if (req.files && req.files.length > 0) {
+      const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer));
+      const uploadedImages = await Promise.all(uploadPromises);
+      recipeData.images = uploadedImages.map(img => img.secure_url);
+      console.log(`Uploaded ${uploadedImages.length} images`);
+    }
+
+    // Create recipe
     const recipe = await Recipe.create(recipeData);
-
-    // Update category recipe count
-    await Category.findByIdAndUpdate(recipe.category, {
-      $inc: { recipeCount: 1 }
-    });
-
-    // Clear cache
-    // await redisClient.del('homepage_recipes');
-    // await redisClient.del('trending_recipes');
 
     res.status(201).json({
       success: true,
       data: recipe,
     });
   } catch (error) {
+    console.error('Create recipe error:', error);
     next(error);
   }
 };
@@ -215,34 +260,74 @@ const updateRecipe = async (req, res, next) => {
       return next(new AppError('You can only update your own recipes', 403));
     }
 
-    // Process new images
+    // Prepare update data
+    const updateData = {};
+
+    // Basic fields
+    if (req.body.title) updateData.title = req.body.title;
+    if (req.body.description) updateData.description = req.body.description;
+    if (req.body.category) updateData.category = req.body.category;
+    if (req.body.difficulty) updateData.difficulty = req.body.difficulty;
+    if (req.body.servings) updateData.servings = parseInt(req.body.servings);
+    if (req.body.status) updateData.status = req.body.status;
+
+    // Parse JSON fields
+    if (req.body.ingredients) {
+      try {
+        updateData.ingredients = JSON.parse(req.body.ingredients);
+      } catch (e) {}
+    }
+    if (req.body.steps) {
+      try {
+        updateData.steps = JSON.parse(req.body.steps);
+      } catch (e) {}
+    }
+    if (req.body.tags) {
+      try {
+        updateData.tags = JSON.parse(req.body.tags);
+      } catch (e) {}
+    }
+
+    // Cooking time
+    if (req.body['cookingTime[prep]'] || req.body['cookingTime[cook]']) {
+      updateData.cookingTime = {
+        prep: parseInt(req.body['cookingTime[prep]']) || recipe.cookingTime?.prep || 0,
+        cook: parseInt(req.body['cookingTime[cook]']) || recipe.cookingTime?.cook || 0,
+        total: (parseInt(req.body['cookingTime[prep]']) || 0) + (parseInt(req.body['cookingTime[cook]']) || 0),
+      };
+    }
+
+    // Upload new images
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file =>
-        cloudinary.uploader.upload(file.path, {
-          folder: 'recipes',
-          transformation: [{ width: 800, height: 600, crop: 'limit' }]
-        })
-      );
+      const uploadPromises = req.files.map(file => uploadToCloudinary(file.buffer));
       const uploadedImages = await Promise.all(uploadPromises);
-      req.body.images = [...recipe.images, ...uploadedImages.map(img => img.secure_url)];
+      const newImages = uploadedImages.map(img => img.secure_url);
+      updateData.images = [...(recipe.images || []), ...newImages];
+    }
+
+    // Handle image deletion
+    if (req.body.imagesToDelete) {
+      let imagesToDelete;
+      try {
+        imagesToDelete = JSON.parse(req.body.imagesToDelete);
+      } catch (e) {
+        imagesToDelete = [];
+      }
+      updateData.images = recipe.images.filter(img => !imagesToDelete.includes(img));
     }
 
     const updatedRecipe = await Recipe.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
-
-    // Clear cache
-    // await redisClient.del(`recipe_${req.params.id}`);
-    // await redisClient.del('homepage_recipes');
-    // await redisClient.del('trending_recipes');
 
     res.json({
       success: true,
       data: updatedRecipe,
     });
   } catch (error) {
+    console.error('Update recipe error:', error);
     next(error);
   }
 };
