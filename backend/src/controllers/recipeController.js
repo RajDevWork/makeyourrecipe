@@ -38,8 +38,8 @@ const uploadToCloudinary = (buffer, folder = 'reactiveRecipes') => {
 
 const createRecipe = async (req, res, next) => {
   try {
-    console.log('Request body:', req.body);
-    console.log('Request files:', req.files);
+    // console.log('Request body:', req.body);
+    // console.log('Request files:', req.files);
 
     // Parse JSON fields
     let ingredients = [];
