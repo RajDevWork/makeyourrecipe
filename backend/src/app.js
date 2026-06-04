@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path');
 const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -28,6 +29,7 @@ const app = express();
 // Connect to databases
 connectDB();
 // connectRedis();
+
 
 // Global rate limiter
 const globalLimiter = rateLimit({
@@ -96,13 +98,19 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
 
 // 404 handler - FIXED with named parameter
-app.use('/*splat', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Cannot find ${req.originalUrl} on this server`,
-  });
-});
+// app.use('/*splat', (req, res) => {
+//   res.status(404).json({
+//     success: false,
+//     message: `Cannot find ${req.originalUrl} on this server`,
+//   });
+// });
 
+// React Build Serve
+app.use(express.static(path.join(__dirname, '../public')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 // Global error handler
 app.use(errorHandler);
 

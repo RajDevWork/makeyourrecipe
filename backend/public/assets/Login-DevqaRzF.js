@@ -1,0 +1,77 @@
+import{r as i,A as p,D as g,G as b,n as e,p as s,C as f,M as w,L as c,o as j}from"./index-CIU3cpb5.js";import{L as y}from"./lock-CPIa96pg.js";import{E as v}from"./eye-off-DgfT3MvF.js";import{E as N}from"./eye-B8VXfbnA.js";import{A as k}from"./arrow-right-BH8dr57i.js";const F=()=>{const[t,d]=i.useState(!1),[a,x]=i.useState({email:"",password:""}),m=p(),u=g(),{loading:n}=b(r=>r.auth),l=r=>{x({...a,[r.target.name]:r.target.value})},h=async r=>{var o;r.preventDefault(),(o=(await m(j(a))).payload)!=null&&o.success&&u("/dashboard")};return e.jsxs("div",{className:"relative min-h-screen overflow-hidden bg-black",children:[e.jsxs("div",{className:"absolute inset-0",children:[e.jsx("div",{className:"absolute top-0 left-0 h-[400px] w-[400px] rounded-full bg-orange-500/20 blur-[140px]"}),e.jsx("div",{className:"absolute bottom-0 right-0 h-[400px] w-[400px] rounded-full bg-pink-500/20 blur-[140px]"}),e.jsx("div",{className:"absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-500/10 blur-[120px]"}),e.jsx("div",{className:"absolute inset-0 bg-gradient-to-br from-slate-950 via-black to-slate-900"})]}),e.jsx("div",{className:"absolute inset-0 opacity-[0.03]",style:{backgroundImage:"linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(to right, #ffffff 1px, transparent 1px)",backgroundSize:"50px 50px"}}),e.jsx("div",{className:"relative z-10 flex min-h-screen items-center justify-center px-4 py-10",children:e.jsxs(s.div,{initial:{opacity:0,y:40,scale:.95},animate:{opacity:1,y:0,scale:1},transition:{duration:.6},className:`\r
+            w-full\r
+            max-w-md\r
+            rounded-3xl\r
+            border\r
+            border-white/10\r
+            bg-white/5\r
+            backdrop-blur-2xl\r
+            shadow-[0_20px_80px_rgba(0,0,0,0.5)]\r
+            p-8\r
+          `,children:[e.jsxs("div",{className:"text-center mb-8",children:[e.jsx(s.div,{initial:{scale:0},animate:{scale:1},transition:{delay:.2},className:`\r
+                mx-auto\r
+                mb-5\r
+                flex\r
+                h-20\r
+                w-20\r
+                items-center\r
+                justify-center\r
+                rounded-3xl\r
+                bg-gradient-to-r\r
+                from-orange-500\r
+        via-amber-500\r
+        to-rose-500\r
+                shadow-lg\r
+                shadow-orange-500/30\r
+              `,children:e.jsx(f,{className:"h-10 w-10 text-white"})}),e.jsx("h1",{className:"text-4xl font-extrabold text-white",children:"Welcome Back"}),e.jsx("p",{className:"mt-3 text-gray-400",children:"Sign in to continue your culinary journey"})]}),e.jsxs("form",{onSubmit:h,className:"space-y-5",children:[e.jsxs("div",{children:[e.jsx("label",{className:"mb-2 block text-sm font-medium text-gray-300",children:"Email Address"}),e.jsxs("div",{className:"relative",children:[e.jsx(w,{className:"absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500"}),e.jsx("input",{type:"email",name:"email",value:a.email,onChange:l,required:!0,placeholder:"you@example.com",className:`\r
+                    w-full\r
+                    rounded-2xl\r
+                    border\r
+                    border-white/10\r
+                    bg-white/5\r
+                    py-4\r
+                    pl-12\r
+                    pr-4\r
+                    text-white\r
+                    placeholder:text-gray-500\r
+                    outline-none\r
+                    transition-all\r
+                    duration-300\r
+                    focus:border-orange-500\r
+                    focus:ring-4\r
+                    focus:ring-orange-500/20\r
+                  `})]})]}),e.jsxs("div",{children:[e.jsx("label",{className:"mb-2 block text-sm font-medium text-gray-300",children:"Password"}),e.jsxs("div",{className:"relative",children:[e.jsx(y,{className:"absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500"}),e.jsx("input",{type:t?"text":"password",name:"password",value:a.password,onChange:l,required:!0,placeholder:"••••••••",className:`\r
+                    w-full\r
+                    rounded-2xl\r
+                    border\r
+                    border-white/10\r
+                    bg-white/5\r
+                    py-4\r
+                    pl-12\r
+                    pr-12\r
+                    text-white\r
+                    placeholder:text-gray-500\r
+                    outline-none\r
+                    transition-all\r
+                    duration-300\r
+                    focus:border-orange-500\r
+                    focus:ring-4\r
+                    focus:ring-orange-500/20\r
+                  `}),e.jsx("button",{type:"button",onClick:()=>d(!t),className:"absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white",children:t?e.jsx(v,{className:"h-5 w-5"}):e.jsx(N,{className:"h-5 w-5"})})]})]}),e.jsxs("div",{className:"flex items-center justify-between",children:[e.jsxs("label",{className:"flex items-center gap-2 text-sm text-gray-400",children:[e.jsx("input",{type:"checkbox",className:"rounded border-gray-600 bg-transparent"}),"Remember me"]}),e.jsx(c,{to:"/forgot-password",className:"text-sm text-orange-400 hover:text-orange-300",children:"Forgot Password?"})]}),e.jsx(s.button,{whileHover:{scale:1.02},whileTap:{scale:.98},type:"submit",disabled:n,className:`\r
+                flex\r
+                w-full\r
+                items-center\r
+                justify-center\r
+                gap-2\r
+                rounded-2xl\r
+                bg-gradient-to-r\r
+                from-orange-500\r
+        via-amber-500\r
+        to-rose-500\r
+                py-4\r
+                font-semibold\r
+                text-white\r
+                shadow-lg\r
+                shadow-orange-500/30\r
+                transition-all\r
+              `,children:n?e.jsxs(e.Fragment,{children:[e.jsx("div",{className:"h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"}),"Signing In..."]}):e.jsxs(e.Fragment,{children:["Sign In",e.jsx(k,{className:"h-5 w-5"})]})})]}),e.jsxs("p",{className:"mt-8 text-center text-gray-400",children:["Don't have an account?"," ",e.jsx(c,{to:"/register",className:"font-semibold text-orange-400 hover:text-orange-300",children:"Create Account"})]})]})})]})};export{F as default};

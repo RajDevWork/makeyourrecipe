@@ -1,0 +1,325 @@
+import{j as u,D as k,n as e,p as t,r as s,L as i,H as m,C}from"./index-CIU3cpb5.js";import{S as g,a as S,R as h}from"./RecipeCard-Bvncq3aq.js";import{r as p,C as R}from"./recipeService-CDqM8tdv.js";import{c as I}from"./categoryService-2eKq3P7r.js";import{A as c}from"./arrow-right-BH8dr57i.js";import{U as E}from"./users-BShLSRkT.js";import{B as H}from"./book-open-78Hq4EC2.js";import"./bookmark-BQTk9Rrf.js";import"./eye-B8VXfbnA.js";/**
+ * @license lucide-react v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const B=[["path",{d:"M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",key:"1s2grr"}],["path",{d:"M20 2v4",key:"1rf3ol"}],["path",{d:"M22 4h-4",key:"gwowj6"}],["circle",{cx:"4",cy:"20",r:"2",key:"6kqj1y"}]],A=u("sparkles",B);/**
+ * @license lucide-react v1.16.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const F=[["path",{d:"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",key:"1xq2db"}]],b=u("zap",F),T=({category:a,index:o})=>{const d=k();return e.jsxs(t.div,{initial:{opacity:0,scale:.9},whileInView:{opacity:1,scale:1},transition:{delay:o*.05},viewport:{once:!0},whileHover:{y:-5},onClick:()=>d(`/explore?category=${a._id}`),className:"glass-card p-6 text-center cursor-pointer group",children:[e.jsx("div",{className:"text-5xl mb-3 group-hover:scale-110 transition-transform duration-300",children:a.icon||"🍽️"}),e.jsx("h3",{className:"font-semibold text-gray-900 dark:text-white mb-1",children:a.name}),e.jsxs("p",{className:"text-sm text-gray-500 dark:text-gray-400",children:[a.recipeCount||0," recipes"]})]})},J=()=>{const[a,o]=s.useState([]),[d,v]=s.useState([]),[f,j]=s.useState([]),[V,w]=s.useState(!0);s.useEffect(()=>{y()},[]);const y=async()=>{try{const[r,n,x]=await Promise.all([p.getFeaturedRecipes(),p.getTrendingRecipes(),I.getAllCategories()]);o(r.data||r||[]),v(n.data||n||[]),j(x.data||x||[])}catch(r){console.error("Error fetching home data:",r)}finally{w(!1)}},l={hidden:{opacity:0,y:60},visible:{opacity:1,y:0}},N={hidden:{opacity:0},visible:{opacity:1,transition:{staggerChildren:.1}}};return e.jsxs("div",{className:"min-h-screen overflow-x-hidden",children:[e.jsxs("section",{className:"relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-slate-950",children:[e.jsxs("div",{className:"absolute inset-0",children:[e.jsx("div",{className:"absolute top-0 left-0 h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-[180px]"}),e.jsx("div",{className:"absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-amber-500/10 blur-[180px]"}),e.jsx("div",{className:"absolute inset-0 bg-gradient-to-b from-orange-50 via-white to-white dark:from-slate-950 dark:via-slate-950 dark:to-slate-900"})]}),e.jsx("div",{className:"relative container mx-auto px-4 py-24 z-10",children:e.jsxs(t.div,{initial:"hidden",animate:"visible",variants:N,className:"max-w-5xl mx-auto text-center",children:[e.jsxs(t.div,{variants:l,className:`\r
+          inline-flex\r
+          items-center\r
+          gap-2\r
+          rounded-full\r
+          bg-orange-100\r
+          dark:bg-orange-500/10\r
+          px-4\r
+          py-2\r
+          text-orange-600\r
+          dark:text-orange-400\r
+          font-medium\r
+          mb-8\r
+        `,children:[e.jsx(A,{className:"w-4 h-4"}),"Welcome to RecipeBook"]}),e.jsxs(t.h1,{variants:l,className:`\r
+          text-5xl\r
+          md:text-7xl\r
+          lg:text-8xl\r
+          font-black\r
+          leading-[0.95]\r
+          tracking-tight\r
+          mb-8\r
+        `,children:[e.jsxs("span",{className:"bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent",children:["Discover &",e.jsx("br",{}),"Share"]}),e.jsx("br",{}),e.jsx("span",{className:"text-slate-900 dark:text-white",children:"Amazing Recipes"})]}),e.jsx(t.p,{variants:l,className:`\r
+          max-w-3xl\r
+          mx-auto\r
+          text-lg\r
+          md:text-xl\r
+          text-slate-600\r
+          dark:text-slate-400\r
+          leading-relaxed\r
+          mb-10\r
+        `,children:"Join thousands of food lovers, discover delicious recipes, save your favorites, and share your culinary creations with the world."}),e.jsxs(t.div,{variants:l,className:"flex flex-col sm:flex-row gap-4 justify-center",children:[e.jsxs(i,{to:"/explore",className:`\r
+            inline-flex\r
+            items-center\r
+            justify-center\r
+            rounded-2xl\r
+            px-8\r
+            py-4\r
+            font-semibold\r
+            text-white\r
+            bg-gradient-to-r\r
+            from-orange-500\r
+            via-amber-500\r
+            to-rose-500\r
+            shadow-lg\r
+            shadow-orange-500/20\r
+            hover:scale-105\r
+            transition-all\r
+            duration-300\r
+          `,children:["Explore Recipes",e.jsx(c,{className:"w-5 h-5 ml-2"})]}),e.jsx(i,{to:"/create-recipe",className:`\r
+            inline-flex\r
+            items-center\r
+            justify-center\r
+            rounded-2xl\r
+            px-8\r
+            py-4\r
+            font-semibold\r
+            border\r
+            border-slate-200\r
+            dark:border-slate-700\r
+            bg-white\r
+            dark:bg-slate-900\r
+            text-slate-900\r
+            dark:text-white\r
+            hover:shadow-lg\r
+            transition-all\r
+          `,children:"Share Your Recipe"})]})]})}),e.jsx(t.div,{animate:{y:[0,10,0]},transition:{repeat:1/0,duration:2},className:"absolute bottom-8 left-1/2 -translate-x-1/2",children:e.jsx("div",{className:"w-6 h-10 rounded-full border-2 border-orange-300 dark:border-orange-500/30 flex justify-center",children:e.jsx("div",{className:"w-1 h-2 mt-2 rounded-full bg-orange-500 animate-pulse"})})})]}),e.jsx("section",{className:"py-24 bg-gradient-to-b from-orange-50 via-white to-orange-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950",children:e.jsxs("div",{className:"container mx-auto px-4",children:[e.jsxs("div",{className:"text-center mb-16",children:[e.jsx("span",{className:"inline-flex items-center rounded-full bg-orange-100 dark:bg-orange-500/10 px-4 py-2 text-sm font-medium text-orange-600 dark:text-orange-400",children:"Why Choose RecipeBook"}),e.jsx("h2",{className:"mt-5 text-4xl md:text-5xl font-black",children:e.jsx("span",{className:"bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent",children:"Everything You Need"})}),e.jsx("p",{className:"mt-4 max-w-2xl mx-auto text-slate-600 dark:text-slate-400 text-lg",children:"Discover recipes, save your favorites, and become part of a growing food-loving community."})]}),e.jsx("div",{className:"grid gap-8 md:grid-cols-3",children:[{title:"Instant Inspiration",description:"Browse curated recipe ideas in seconds and never run out of dinner plans.",icon:b},{title:"Cook with Confidence",description:"Step-by-step recipes keep every meal easy, delicious, and stress-free.",icon:m},{title:"Community Favorites",description:"Save, share, and discover trending dishes loved by home cooks.",icon:g}].map((r,n)=>e.jsxs(t.div,{initial:{opacity:0,y:30},whileInView:{opacity:1,y:0},transition:{duration:.5,delay:n*.1},viewport:{once:!0},whileHover:{y:-8},className:`\r
+            group\r
+            rounded-[32px]\r
+            border\r
+            border-orange-100\r
+            dark:border-slate-800\r
+            bg-white\r
+            dark:bg-slate-900\r
+            p-8\r
+            shadow-sm\r
+            hover:shadow-2xl\r
+            transition-all\r
+            duration-300\r
+          `,children:[e.jsx("div",{className:`\r
+              mb-6\r
+              flex\r
+              h-14\r
+              w-14\r
+              items-center\r
+              justify-center\r
+              rounded-2xl\r
+              bg-gradient-to-br\r
+              from-orange-500\r
+              via-amber-500\r
+              to-rose-500\r
+              text-white\r
+              shadow-lg\r
+              shadow-orange-500/20\r
+            `,children:e.jsx(r.icon,{className:"h-7 w-7"})}),e.jsx("h3",{className:"mb-3 text-2xl font-bold text-slate-900 dark:text-white",children:r.title}),e.jsx("p",{className:"leading-relaxed text-slate-600 dark:text-slate-400",children:r.description}),e.jsx("div",{className:"mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300 group-hover:w-24"})]},r.title))})]})}),e.jsx("section",{className:"py-24 bg-white dark:bg-slate-900",children:e.jsxs("div",{className:"container mx-auto px-4",children:[e.jsxs("div",{className:"text-center mb-16",children:[e.jsx("span",{className:`\r
+          inline-flex\r
+          items-center\r
+          rounded-full\r
+          bg-orange-100\r
+          dark:bg-orange-500/10\r
+          px-4\r
+          py-2\r
+          text-sm\r
+          font-medium\r
+          text-orange-600\r
+          dark:text-orange-400\r
+        `,children:"Community Impact"}),e.jsx("h2",{className:"mt-5 text-5xl md:text-6xl font-black",children:e.jsx("span",{className:"bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent",children:"Trusted By Thousands"})}),e.jsx("p",{className:"mt-4 text-lg text-slate-600 dark:text-slate-400",children:"Join one of the fastest growing recipe communities."})]}),e.jsx("div",{className:"grid grid-cols-2 lg:grid-cols-4 gap-6",children:[{icon:C,label:"Recipes",value:"10,000+"},{icon:E,label:"Active Chefs",value:"5,000+"},{icon:R,label:"Minutes Saved",value:"1M+"},{icon:S,label:"5-Star Ratings",value:"50K+"}].map((r,n)=>e.jsxs(t.div,{initial:{opacity:0,y:30},whileInView:{opacity:1,y:0},transition:{duration:.4,delay:n*.1},viewport:{once:!0},whileHover:{y:-5},className:`\r
+            rounded-[28px]\r
+            border\r
+            border-slate-200\r
+            dark:border-slate-800\r
+            bg-slate-50\r
+            dark:bg-slate-900\r
+            p-8\r
+            text-center\r
+            transition-all\r
+            duration-300\r
+            hover:shadow-xl\r
+          `,children:[e.jsx("div",{className:`\r
+              mx-auto\r
+              mb-5\r
+              flex\r
+              h-14\r
+              w-14\r
+              items-center\r
+              justify-center\r
+              rounded-2xl\r
+              bg-gradient-to-br\r
+              from-orange-500\r
+              via-amber-500\r
+              to-rose-500\r
+              text-white\r
+              shadow-lg\r
+              shadow-orange-500/20\r
+            `,children:e.jsx(r.icon,{className:"h-7 w-7"})}),e.jsx("h3",{className:`\r
+              text-4xl\r
+              md:text-5xl\r
+              font-black\r
+              bg-gradient-to-r\r
+              from-orange-500\r
+              via-amber-500\r
+              to-rose-500\r
+              bg-clip-text\r
+              text-transparent\r
+            `,children:r.value}),e.jsx("p",{className:"mt-2 text-slate-600 dark:text-slate-400 font-medium",children:r.label})]},n))})]})}),e.jsx("section",{className:"py-24 bg-white dark:bg-slate-950",children:e.jsxs("div",{className:"container mx-auto px-4",children:[e.jsxs(t.div,{initial:{opacity:0,y:30},whileInView:{opacity:1,y:0},viewport:{once:!0},className:"text-center mb-16",children:[e.jsx("span",{className:`\r
+          inline-flex\r
+          items-center\r
+          rounded-full\r
+          bg-orange-100\r
+          dark:bg-orange-500/10\r
+          px-4\r
+          py-2\r
+          text-sm\r
+          font-medium\r
+          text-orange-600\r
+          dark:text-orange-400\r
+        `,children:"Browse Categories"}),e.jsx("h2",{className:"mt-5 text-5xl md:text-6xl font-black",children:e.jsx("span",{className:"bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent",children:"Find Your Next Meal"})}),e.jsx("p",{className:"mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400",children:"Explore recipes by category and discover dishes you'll love to cook."})]}),e.jsx("div",{className:`\r
+        rounded-[40px]\r
+        border\r
+        border-slate-200\r
+        dark:border-slate-800\r
+        bg-slate-50\r
+        dark:bg-slate-900\r
+        p-6\r
+        md:p-10\r
+      `,children:e.jsx("div",{className:"grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6",children:f.slice(0,8).map((r,n)=>e.jsx(T,{category:r,index:n},r._id))})})]})}),e.jsx("section",{className:"py-24 bg-white dark:bg-slate-950",children:e.jsxs("div",{className:"container mx-auto px-4",children:[e.jsxs(t.div,{initial:{opacity:0,y:30},whileInView:{opacity:1,y:0},viewport:{once:!0},className:"text-center mb-16",children:[e.jsx("span",{className:`\r
+          inline-flex\r
+          items-center\r
+          rounded-full\r
+          bg-orange-100\r
+          dark:bg-orange-500/10\r
+          px-4\r
+          py-2\r
+          text-sm\r
+          font-medium\r
+          text-orange-600\r
+          dark:text-orange-400\r
+        `,children:"Chef's Picks"}),e.jsx("h2",{className:"mt-5 text-5xl md:text-6xl font-black",children:e.jsx("span",{className:"bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent",children:"Featured Recipes"})}),e.jsx("p",{className:"mt-4 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400",children:"Hand-picked recipes from our top chefs that you'll absolutely love."})]}),e.jsx("div",{className:`\r
+        rounded-[40px]\r
+        border\r
+        border-slate-200\r
+        dark:border-slate-800\r
+        bg-slate-50\r
+        dark:bg-slate-900\r
+        p-6\r
+        md:p-10\r
+      `,children:e.jsx("div",{className:"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",children:a.map((r,n)=>e.jsx(h,{recipe:r,index:n},r._id))})})]})}),e.jsx("section",{className:"py-24 bg-slate-50 dark:bg-slate-900",children:e.jsxs("div",{className:"container mx-auto px-4",children:[e.jsxs("div",{className:"flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16",children:[e.jsxs("div",{children:[e.jsx("span",{className:`\r
+            inline-flex\r
+            items-center\r
+            rounded-full\r
+            bg-orange-100\r
+            dark:bg-orange-500/10\r
+            px-4\r
+            py-2\r
+            text-sm\r
+            font-medium\r
+            text-orange-600\r
+            dark:text-orange-400\r
+          `,children:"Trending This Week"}),e.jsx("h2",{className:"mt-5 text-5xl md:text-6xl font-black",children:e.jsx("span",{className:"bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent",children:"Trending Recipes"})}),e.jsx("p",{className:"mt-4 text-lg text-slate-600 dark:text-slate-400",children:"Discover what food lovers are cooking right now."})]}),e.jsxs(i,{to:"/explore?sort=trending",className:`\r
+          inline-flex\r
+          items-center\r
+          gap-2\r
+          font-semibold\r
+          text-orange-500\r
+          hover:text-orange-600\r
+          transition-colors\r
+        `,children:["View All",e.jsx(c,{className:"w-5 h-5"})]})]}),e.jsx("div",{className:`\r
+        rounded-[40px]\r
+        border\r
+        border-slate-200\r
+        dark:border-slate-800\r
+        bg-white\r
+        dark:bg-slate-950\r
+        p-6\r
+        md:p-10\r
+      `,children:e.jsx("div",{className:"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",children:d.map((r,n)=>e.jsx(h,{recipe:r,index:n,variant:"trending"},r._id))})})]})}),e.jsxs("section",{className:"relative py-28 overflow-hidden",children:[e.jsx("div",{className:"absolute inset-0 bg-cover bg-center",style:{backgroundImage:"url('https://images.unsplash.com/photo-1504674900247-0877df9cc836')"}}),e.jsx("div",{className:"absolute inset-0 bg-black/65"}),e.jsx("div",{className:"absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/70"}),e.jsxs("div",{className:"container mx-auto px-4 relative z-10",children:[e.jsxs("div",{className:"max-w-3xl mx-auto text-center mb-16",children:[e.jsx("span",{className:`\r
+          inline-flex\r
+          items-center\r
+          rounded-full\r
+          bg-orange-500/15\r
+          px-4\r
+          py-2\r
+          text-orange-300\r
+          text-sm\r
+          font-medium\r
+          backdrop-blur-lg\r
+        `,children:"Why Food Lovers Choose Us"}),e.jsxs("h2",{className:"mt-6 text-5xl md:text-6xl font-black text-white",children:["Cook Better,",e.jsx("span",{className:"block bg-gradient-to-r from-orange-400 via-amber-400 to-rose-400 bg-clip-text text-transparent",children:"Every Single Day"})]}),e.jsx("p",{className:"mt-5 text-lg text-slate-300",children:"Discover recipes, save favorites, and become part of a thriving cooking community."})]}),e.jsx("div",{className:"grid md:grid-cols-3 gap-8",children:[{icon:b,title:"Quick & Easy",description:"Find recipes that perfectly fit your busy schedule."},{icon:m,title:"Save Favorites",description:"Build your personal collection of must-try recipes."},{icon:g,title:"Share & Inspire",description:"Showcase your creations and inspire home chefs."}].map((r,n)=>e.jsxs(t.div,{initial:{opacity:0,y:30},whileInView:{opacity:1,y:0},transition:{delay:n*.1},viewport:{once:!0},whileHover:{y:-8},className:`\r
+            rounded-[32px]\r
+            border\r
+            border-white/10\r
+            bg-white/10\r
+            backdrop-blur-xl\r
+            p-8\r
+            text-center\r
+            transition-all\r
+            duration-300\r
+          `,children:[e.jsx("div",{className:`\r
+              mx-auto\r
+              mb-6\r
+              flex\r
+              h-16\r
+              w-16\r
+              items-center\r
+              justify-center\r
+              rounded-2xl\r
+              bg-gradient-to-br\r
+              from-orange-500\r
+              via-amber-500\r
+              to-rose-500\r
+              text-white\r
+            `,children:e.jsx(r.icon,{className:"h-8 w-8"})}),e.jsx("h3",{className:"text-2xl font-bold text-white mb-3",children:r.title}),e.jsx("p",{className:"text-slate-300 leading-relaxed",children:r.description})]},r.title))})]})]}),e.jsx("section",{className:"py-28 bg-slate-50 dark:bg-slate-900",children:e.jsx("div",{className:"container mx-auto px-4",children:e.jsxs("div",{className:`\r
+        relative\r
+        overflow-hidden\r
+        rounded-[48px]\r
+        min-h-[550px]\r
+        flex\r
+        items-center\r
+        justify-center\r
+        shadow-2xl\r
+      `,children:[e.jsx("div",{className:`\r
+          absolute\r
+          inset-0\r
+          bg-cover\r
+          bg-center\r
+          scale-110\r
+        `,style:{backgroundImage:"url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=2070&auto=format&fit=crop')"}}),e.jsx("div",{className:"absolute inset-0 bg-black/70"}),e.jsx("div",{className:"absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/70"}),e.jsx("div",{className:"absolute top-10 left-10 h-48 w-48 rounded-full bg-orange-500/20 blur-[120px]"}),e.jsx("div",{className:"absolute bottom-10 right-10 h-48 w-48 rounded-full bg-amber-500/20 blur-[120px]"}),e.jsx("div",{className:"relative z-10 max-w-4xl px-6 text-center text-white",children:e.jsxs(t.div,{initial:{opacity:0,y:30},whileInView:{opacity:1,y:0},viewport:{once:!0},transition:{duration:.6},children:[e.jsx("div",{className:`\r
+              mx-auto\r
+              mb-8\r
+              flex\r
+              h-20\r
+              w-20\r
+              items-center\r
+              justify-center\r
+              rounded-3xl\r
+              bg-gradient-to-br\r
+              from-orange-500\r
+              via-amber-500\r
+              to-rose-500\r
+              shadow-xl\r
+              shadow-orange-500/30\r
+            `,children:e.jsx(H,{className:"h-10 w-10 text-white"})}),e.jsxs("h2",{className:"text-4xl md:text-6xl font-black leading-tight mb-6",children:["Ready to Share",e.jsx("span",{className:"block bg-gradient-to-r from-orange-400 via-amber-400 to-rose-400 bg-clip-text text-transparent",children:"Your Culinary Creations?"})]}),e.jsx("p",{className:"max-w-2xl mx-auto text-lg md:text-xl text-slate-300 mb-10 leading-relaxed",children:"Join thousands of passionate food lovers, publish your favorite recipes, and inspire home chefs around the world."}),e.jsxs("div",{className:"flex flex-col sm:flex-row justify-center gap-4",children:[e.jsxs(i,{to:"/register",className:`\r
+                inline-flex\r
+                items-center\r
+                justify-center\r
+                gap-2\r
+                rounded-2xl\r
+                bg-gradient-to-r\r
+                from-orange-500\r
+                via-amber-500\r
+                to-rose-500\r
+                px-8\r
+                py-4\r
+                font-semibold\r
+                text-white\r
+                shadow-xl\r
+                shadow-orange-500/30\r
+                hover:scale-105\r
+                transition-all\r
+                duration-300\r
+              `,children:["Get Started Today",e.jsx(c,{className:"w-5 h-5"})]}),e.jsx(i,{to:"/explore",className:`\r
+                inline-flex\r
+                items-center\r
+                justify-center\r
+                rounded-2xl\r
+                border\r
+                border-white/20\r
+                bg-white/10\r
+                backdrop-blur-xl\r
+                px-8\r
+                py-4\r
+                font-semibold\r
+                text-white\r
+                hover:bg-white/20\r
+                transition-all\r
+                duration-300\r
+              `,children:"Explore Recipes"})]})]})})]})})})]})};export{J as default};
