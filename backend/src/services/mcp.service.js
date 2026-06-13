@@ -8,7 +8,7 @@ const getMcpClient = async ()=>{
     //create transporter
     const transport = new StdioClientTransport({
         command:'npx',
-        args:['tsx','../mcp/src/index.ts']
+        args:['tsx','./mcp/src/index.ts']
     });
 
     //create client to connect mcp
