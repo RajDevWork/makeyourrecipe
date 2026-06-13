@@ -61,6 +61,14 @@ const MCPAiRecommendation = async (req, res) => {
 
       const recommendation = JSON.parse(cleanResponse);
 
+       if (recommendation?.recommendedRecipe) {
+        recommendation.recommendedRecipe.recommendationScore =
+            Math.max(
+            80,
+            recommendation.recommendedRecipe.recommendationScore || 0
+            );
+        }
+
       return res.json({
         success: true,
         source: "gemini",
