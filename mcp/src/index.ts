@@ -38,4 +38,4 @@ const transporter = new StdioServerTransport()
 
 await server.connect(transporter)
 
-console.log("Recommend recipe is running....")
+console.error("Recommend recipe is running....")

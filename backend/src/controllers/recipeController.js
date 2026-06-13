@@ -588,66 +588,54 @@ const getFeaturedRecipes = async (req, res, next) => {
 
 const recommendRecipe = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const {difficulty} = req.body;
 
-    const user = await User.findById(userId)
-      .populate("likedRecipes", "tags category")
-      .populate("recentlyViewed", "tags category");
+    // const user = await User.find({difficulty:difficulty})
+    //   .populate("likedRecipes", "tags category")
+    //   .populate("recentlyViewed", "tags category");
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found"
-      });
-    }
+    // if (!user) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "User not found"
+    //   });
+    // }
 
-    // Collect categories
-    const categoryIds = new Set();
+    // // Collect categories
+    // const categoryIds = new Set();
 
-    user.likedRecipes?.forEach(recipe => {
-      if (recipe.category) {
-        categoryIds.add(recipe.category.toString());
-      }
-    });
+    // user.likedRecipes?.forEach(recipe => {
+    //   if (recipe.category) {
+    //     categoryIds.add(recipe.category.toString());
+    //   }
+    // });
 
-    user.recentlyViewed?.forEach(recipe => {
-      if (recipe.category) {
-        categoryIds.add(recipe.category.toString());
-      }
-    });
+    // user.recentlyViewed?.forEach(recipe => {
+    //   if (recipe.category) {
+    //     categoryIds.add(recipe.category.toString());
+    //   }
+    // });
 
-    // Collect tags
-    const tags = [];
+    // // Collect tags
+    // const tags = [];
 
-    user.likedRecipes?.forEach(recipe => {
-      if (recipe.tags?.length) {
-        tags.push(...recipe.tags);
-      }
-    });
+    // user.likedRecipes?.forEach(recipe => {
+    //   if (recipe.tags?.length) {
+    //     tags.push(...recipe.tags);
+    //   }
+    // });
 
-    user.recentlyViewed?.forEach(recipe => {
-      if (recipe.tags?.length) {
-        tags.push(...recipe.tags);
-      }
-    });
+    // user.recentlyViewed?.forEach(recipe => {
+    //   if (recipe.tags?.length) {
+    //     tags.push(...recipe.tags);
+    //   }
+    // });
 
-    // Remove duplicates
-    const uniqueTags = [...new Set(tags)];
+    // // Remove duplicates
+    // const uniqueTags = [...new Set(tags)];
 
     const recommendations = await Recipe.find({
-      status: "published",
-      $or: [
-        {
-          category: {
-            $in: [...categoryIds]
-          }
-        },
-        {
-          tags: {
-            $in: uniqueTags
-          }
-        }
-      ]
+      difficulty:difficulty
     })
       .populate("author", "name")
       .populate("category", "name")

@@ -26,7 +26,7 @@ router.get('/trending', getTrendingRecipes);
 router.get('/featured', getFeaturedRecipes);
 router.get('/:id', getRecipeById);
 router.get('/:id/comments', getComments);
-
+router.post('/recommend', recommendRecipe);
 router.use(protect);
 
 router.post('/',
@@ -57,6 +57,6 @@ router.post('/:id/comments',
   addComment
 );
 
-router.post('/recommend', recommendRecipe);
+
 
 module.exports = router;

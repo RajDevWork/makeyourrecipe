@@ -23,6 +23,7 @@ const recipeRoutes = require('./routes/recipeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const mcpRoutes = require("./routes/mcp.route")
 
 const app = express();
 
@@ -96,6 +97,8 @@ app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/get-mcp-ai-recommendation', mcpRoutes);
+
 
 // 404 handler - FIXED with named parameter
 // app.use('/*splat', (req, res) => {

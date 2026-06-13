@@ -14,6 +14,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@google/genai": "^2.8.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "axios": "^1.16.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
@@ -35,5 +37,9 @@
     "rate-limit-redis": "^4.0.0",
     "stream": "^0.0.3",
     "xss-clean": "^0.1.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "typescript": "^6.0.3"
   }
 }
