@@ -20,36 +20,46 @@ const MCPAiRecommendation = async (req, res) => {
     const recipes = JSON.parse(response);
 
     const prompt = `
-    You are an expert recipe recommendation engine.
+        You are an expert recipe recommendation engine.
 
-    Recipes:
-    ${JSON.stringify(recipes.recommendations, null, 2)}
+        Recipes:
+        ${JSON.stringify(recipes.recommendations, null, 2)}
 
-    Choose the BEST recipe based on:
-    1. Views
-    2. Likes
-    3. Saves
-    4. Cooking time
-    5. Overall appeal
+        Choose the SINGLE BEST recipe based on:
 
-    Return ONLY valid JSON.
+        1. Views (popularity)
+        2. Likes (engagement)
+        3. Saves (strongest user interest signal)
+        4. Cooking time
+        5. Difficulty
+        6. Overall appeal
 
-    {
-    "recommendedRecipe": {
-        "_id": "",
-        "title": "",
-        "description": "",
-        "difficulty": "",
-        "stats": {
-        "views": 0,
-        "likes": 0,
-        "saves": 0
-        },
-        "reason": "",
-        "recommendationScore": 0
-    }
-    }
-    `;
+        Rules:
+        - Prefer recipes with higher saves and likes over views alone.
+        - recommendationScore should represent recommendation confidence.
+        - reason must be concise (maximum 25-30 words).
+        - Return ONLY valid JSON.
+        - Do not include markdown.
+        - Do not include any text outside JSON.
+
+        Return this exact structure:
+
+        {
+        "recommendedRecipe": {
+            "_id": "",
+            "title": "",
+            "description": "",
+            "difficulty": "",
+            "stats": {
+            "views": 0,
+            "likes": 0,
+            "saves": 0
+            },
+            "reason": "",
+            "recommendationScore": 0
+        }
+        }
+        `;
 
     try {
       const aiResult = await generateAiResponse(prompt);
