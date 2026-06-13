@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import RecipeCard from '../components/recipes/RecipeCard';
 import RecipeFilters from '../components/recipes/RecipeFilters';
 import SkeletonCard from '../components/common/SkeletonCard';
@@ -12,8 +12,38 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, total: 0, pages: 0 });
 
+  /** AI recommendation */
+  const [aiRecommendation, setAiRecommendation] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
+  const [isAiGenerated, setIsAiGenerated] = useState(false);
+
+  // console.log("aiRecommendation = ",aiRecommendation);
+
+  const fetchAiRecommendation = async () => {
+    try {
+      setAiLoading(true);
+      const searchQuery = searchParams.get("difficulty") || "easy";
+      const response = await recipeService.getAIRecommendation(searchQuery)
+
+      setAiRecommendation(
+        response.data.recommendation?.recommendedRecipe
+      );
+      setIsAiGenerated(
+        response.data.isAiGenerated
+      );
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+
+
   useEffect(() => {
     fetchRecipes();
+    fetchAiRecommendation();
   }, [searchParams]);
 
   const fetchRecipes = async () => {
@@ -142,6 +172,127 @@ const Explore = () => {
             </p>
           )}
         </div>
+      </motion.div>
+
+      {/* AI Recommendation Here */}
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="
+          mb-8
+          overflow-hidden
+          rounded-[32px]
+          border
+          border-purple-500/20
+          bg-gradient-to-r
+          from-purple-900/30
+          via-indigo-900/30
+          to-pink-900/30
+          backdrop-blur-xl
+          p-6
+        "
+      >
+        {aiLoading ? (
+          <div className="h-32 animate-pulse rounded-3xl bg-white/5" />
+        ) : aiRecommendation ? (
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+
+            <div className="flex-1">
+
+              {/* Badge */}
+              <div
+                className={`
+                  inline-flex items-center gap-2 rounded-full
+                  px-4 py-2 text-sm font-semibold
+                  ${
+                    isAiGenerated
+                      ? "bg-purple-500/20 text-purple-300"
+                      : "bg-amber-500/20 text-amber-300"
+                  }
+                `}
+              >
+                {isAiGenerated
+                  ? "✨ AI Recommended For You"
+                  : "⭐ Community Favorite"}
+              </div>
+
+              {/* Title */}
+              <h2 className="mt-4 text-3xl font-black text-white">
+                {aiRecommendation.title}
+              </h2>
+
+              {/* Description */}
+              <p className="mt-3 max-w-2xl text-slate-300">
+                {aiRecommendation.reason}
+              </p>
+
+              {/* Fallback Message */}
+              {!isAiGenerated && (
+                <div className="mt-4 rounded-2xl bg-white/5 px-4 py-3">
+                  <p className="text-sm text-slate-300">
+                    🤖 AI recommendations are temporarily unavailable.
+                    Showing a recipe loved by our community instead.
+                  </p>
+                </div>
+              )}
+
+              {/* Meta */}
+              <div className="mt-4 flex flex-wrap gap-3">
+
+                {aiRecommendation.difficulty && (
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-sm text-white capitalize">
+                    {aiRecommendation.difficulty}
+                  </span>
+                )}
+
+                {aiRecommendation.recommendationScore && (
+                  <span className="rounded-full bg-green-500/20 px-3 py-1 text-sm text-green-300">
+                    Score {aiRecommendation.recommendationScore}/100
+                  </span>
+                )}
+
+              </div>
+            </div>
+
+            {/* CTA */}
+            <Link
+              to={`/recipe/${aiRecommendation._id}`}
+              className="
+                shrink-0
+                rounded-2xl
+                bg-gradient-to-r
+                from-orange-500
+                to-pink-500
+                px-6
+                py-3
+                font-semibold
+                text-white
+                transition-all
+                hover:scale-105
+              "
+            >
+              View Recipe →
+            </Link>
+
+          </div>
+        ) : (
+          <div className="text-center py-6">
+
+            <div className="text-4xl mb-3">
+              🍳
+            </div>
+
+            <h3 className="text-xl font-bold text-white">
+              No Recommendation Available
+            </h3>
+
+            <p className="mt-2 text-slate-400">
+              Explore recipes and apply filters to get personalized suggestions.
+            </p>
+
+          </div>
+        )}
       </motion.div>
 
       {/* Main Layout */}

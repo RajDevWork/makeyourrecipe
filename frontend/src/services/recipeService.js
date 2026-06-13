@@ -11,6 +11,18 @@ export const recipeService = {
     return response.data;
   },
 
+  getAIRecommendation: async(searchParams)=>{
+
+    const response = await api.post(
+        "/get-mcp-ai-recommendation",
+        {
+          difficulty:searchParams,
+        }
+      );
+
+     return response
+
+  },
   // createRecipe: async (recipeData) => {
   //   const formData = new FormData();
   //   Object.keys(recipeData).forEach(key => {
