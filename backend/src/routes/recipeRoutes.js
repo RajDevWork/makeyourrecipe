@@ -16,6 +16,7 @@ const {
   getComments,
   getTrendingRecipes,
   getFeaturedRecipes,
+  recommendRecipe
 } = require('../controllers/recipeController');
 
 const router = express.Router();
@@ -55,5 +56,7 @@ router.post('/:id/comments',
   validate,
   addComment
 );
+
+router.post('/recommend', recommendRecipe);
 
 module.exports = router;

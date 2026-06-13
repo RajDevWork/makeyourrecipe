@@ -586,6 +586,92 @@ const getFeaturedRecipes = async (req, res, next) => {
   }
 };
 
+const recommendRecipe = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId)
+      .populate("likedRecipes", "tags category")
+      .populate("recentlyViewed", "tags category");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    // Collect categories
+    const categoryIds = new Set();
+
+    user.likedRecipes?.forEach(recipe => {
+      if (recipe.category) {
+        categoryIds.add(recipe.category.toString());
+      }
+    });
+
+    user.recentlyViewed?.forEach(recipe => {
+      if (recipe.category) {
+        categoryIds.add(recipe.category.toString());
+      }
+    });
+
+    // Collect tags
+    const tags = [];
+
+    user.likedRecipes?.forEach(recipe => {
+      if (recipe.tags?.length) {
+        tags.push(...recipe.tags);
+      }
+    });
+
+    user.recentlyViewed?.forEach(recipe => {
+      if (recipe.tags?.length) {
+        tags.push(...recipe.tags);
+      }
+    });
+
+    // Remove duplicates
+    const uniqueTags = [...new Set(tags)];
+
+    const recommendations = await Recipe.find({
+      status: "published",
+      $or: [
+        {
+          category: {
+            $in: [...categoryIds]
+          }
+        },
+        {
+          tags: {
+            $in: uniqueTags
+          }
+        }
+      ]
+    })
+      .populate("author", "name")
+      .populate("category", "name")
+      .sort({
+        "stats.views": -1
+      })
+      .limit(10);
+
+    return res.status(200).json({
+      success: true,
+      count: recommendations.length,
+      recommendations
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
+
 module.exports = {
   createRecipe,
   getAllRecipes,
@@ -598,4 +684,5 @@ module.exports = {
   getComments,
   getTrendingRecipes,
   getFeaturedRecipes,
+  recommendRecipe
 };
