@@ -58,6 +58,7 @@ Return ONLY JSON:
 
       return res.json({
         success: true,
+        source: "gemini",
         isAiGenerated: true,
         recommendation,
       });
@@ -71,6 +72,7 @@ Return ONLY JSON:
       return res.json({
         success: true,
         isAiGenerated: false,
+        source: "fallback",
         recommendation: {
           recommendedRecipe: {
             _id: fallbackRecipe._id,
