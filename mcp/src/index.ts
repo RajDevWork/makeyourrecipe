@@ -32,3 +32,6 @@ server.registerTool(
     };
   }
 );
+
+
+console.log("Recommend recipe is running....")
