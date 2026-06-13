@@ -20,31 +20,36 @@ const MCPAiRecommendation = async (req, res) => {
     const recipes = JSON.parse(response);
 
     const prompt = `
-You are a food recommendation engine.
+    You are an expert recipe recommendation engine.
 
-Recipes:
-${JSON.stringify(recipes, null, 2)}
+    Recipes:
+    ${JSON.stringify(recipes.recommendations, null, 2)}
 
-Choose the best recipe.
+    Choose the BEST recipe based on:
+    1. Views
+    2. Likes
+    3. Saves
+    4. Cooking time
+    5. Overall appeal
 
-Return ONLY JSON:
+    Return ONLY valid JSON.
 
-{
-  "recommendedRecipe": {
-    "_id": "",
-    "title": "",
-    "description": "",
-    "difficulty": "",
-    "stats": {
-      "views": 0,
-      "likes": 0,
-      "saves": 0
-    },
-    "reason": "",
-    "recommendationScore": 0
-  }
-}
-`;
+    {
+    "recommendedRecipe": {
+        "_id": "",
+        "title": "",
+        "description": "",
+        "difficulty": "",
+        "stats": {
+        "views": 0,
+        "likes": 0,
+        "saves": 0
+        },
+        "reason": "",
+        "recommendationScore": 0
+    }
+    }
+    `;
 
     try {
       const aiResult = await generateAiResponse(prompt);
@@ -65,7 +70,7 @@ Return ONLY JSON:
 
     } catch (geminiError) {
     //   console.error("Gemini Error:", geminiError.message);
-        console.log("INSIDE FALLBACK");
+       console.error("AI recommendation fallback activated" );
       // Fallback Recipe
       const fallbackRecipe = recipes.recommendations?.[0];
 
