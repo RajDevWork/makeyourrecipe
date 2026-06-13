@@ -33,5 +33,9 @@ server.registerTool(
   }
 );
 
+//Create Transport
+const transporter = new StdioServerTransport()
+
+await server.connect(transporter)
 
 console.log("Recommend recipe is running....")
