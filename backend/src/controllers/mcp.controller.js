@@ -1,82 +1,101 @@
-const { getMcpClient } = require( "../services/mcp.service")
-const { generateAiResponse } = require( "../services/gemini.service");
+const { getMcpClient } = require("../services/mcp.service");
+const { generateAiResponse } = require("../services/gemini.service");
 
-const MCPAiRecommendation = async(req,res)=>{
-        const client = await getMcpClient()
-        const {difficulty} = req.body;
+const MCPAiRecommendation = async (req, res) => {
+  try {
+    const client = await getMcpClient();
+    const { difficulty } = req.body;
 
-        // console.log("client = ",client)
-        //this is await operation.
-        // const tools = await client.listTools();
+    console.log("Calling MCP Tool...");
 
+    const result = await client.callTool({
+      name: "recommend_recipe",
+      arguments: {
+        difficulty,
+      },
+    });
 
-        //result chaiye
-        const result = await client.callTool({
-            name:"recommend_recipe",
-            arguments:{
-                difficulty:difficulty
-            }
-        })
+    const response = result.content[0].text;
 
-        //respons
+    const recipes = JSON.parse(response);
 
-        let response = (result.content)[0].text
+    const prompt = `
+You are a food recommendation engine.
 
-        const recipes = JSON.parse(response);
+Recipes:
+${JSON.stringify(recipes, null, 2)}
 
-        //generating AI recommendation from data
-        const prompt = `
-        You are a food recommendation engine.
+Choose the best recipe.
 
-        Recipes:
-        ${JSON.stringify(recipes, null, 2)}
+Return ONLY JSON:
 
-        Choose the best recipe.
-
-        Return ONLY JSON:
-
-        {
-        "recommendedRecipe": {
-            "_id": "",
-            "title": "",
-            "description": "",
-            "difficulty": "",
-            "stats": {
-            "views": 0,
-            "likes": 0,
-            "saves": 0
-            },
-            "reason": "",
-            "recommendationScore": 0
-        }
-        }
-        `;
-
-        const AiResult = await generateAiResponse(prompt)
-
-        try {
-        const recommendation = JSON.parse(AiResult);
-
-        return res.json({
-            success: true,
-            recommendation
-        });
-
-        } catch (err) {
-
-        const cleanResponse = AiResult
-            .replace(/```json\s*/gi, "")
-            .replace(/```\s*/g, "")
-            .trim();
-
-        const recommendation = JSON.parse(cleanResponse);
-
-        return res.json({
-            success: true,
-            recommendation
-        });
-        }
+{
+  "recommendedRecipe": {
+    "_id": "",
+    "title": "",
+    "description": "",
+    "difficulty": "",
+    "stats": {
+      "views": 0,
+      "likes": 0,
+      "saves": 0
+    },
+    "reason": "",
+    "recommendationScore": 0
+  }
 }
+`;
+
+    try {
+      const aiResult = await generateAiResponse(prompt);
+
+      const cleanResponse = aiResult
+        .replace(/```json\s*/gi, "")
+        .replace(/```\s*/g, "")
+        .trim();
+
+      const recommendation = JSON.parse(cleanResponse);
+
+      return res.json({
+        success: true,
+        isAiGenerated: true,
+        recommendation,
+      });
+
+    } catch (geminiError) {
+    //   console.error("Gemini Error:", geminiError.message);
+        console.log("INSIDE FALLBACK");
+      // Fallback Recipe
+      const fallbackRecipe = recipes.recommendations?.[0];
+
+      return res.json({
+        success: true,
+        isAiGenerated: false,
+        recommendation: {
+          recommendedRecipe: {
+            _id: fallbackRecipe._id,
+            title: fallbackRecipe.title,
+            description: fallbackRecipe.description,
+            difficulty: fallbackRecipe.difficulty,
+            stats: fallbackRecipe.stats,
+            reason:
+              "This recipe is currently trending in our community based on popularity and engagement.",
+            recommendationScore: 85,
+          },
+        },
+      });
+    }
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
-    MCPAiRecommendation
-}
+  MCPAiRecommendation,
+};

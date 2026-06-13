@@ -1,30 +1,27 @@
-const { Client } = require("@modelcontextprotocol/sdk/client/index.js")
+const { Client } = require("@modelcontextprotocol/sdk/client/index.js");
 const { StdioClientTransport } = require("@modelcontextprotocol/sdk/client/stdio.js");
 
-let client = new Client;
+let client = null;
 
-const getMcpClient = async ()=>{
-
-    //create transporter
-    const transport = new StdioClientTransport({
-        command:'npx',
-        args:['tsx','./mcp/src/index.ts']
-    });
-
-    //create client to connect mcp
-    client = new Client({
-        name:'tiny-cats-client',
-        version:'1.0.0'
-    });
-
-    //connect client
-    await client.connect(transport);
-
-    return client;
+const getMcpClient = async () => {
+  if (client) return client;
+console.log("Creating MCP Transport...");
+  const transport = new StdioClientTransport({
+    command: "npx",
+    args: ["tsx", "./mcp/src/index.ts"]
+  });
+console.log("Creating MCP Client...");
+  client = new Client({
+    name: "recipe-client",
+    version: "1.0.0"
+  });
 
 
-}
+  await client.connect(transport);
 
-module.exports = {
-    getMcpClient
-}
+  console.log("MCP Connected");
+
+  return client;
+};
+
+module.exports = { getMcpClient };
