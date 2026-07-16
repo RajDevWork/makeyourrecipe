@@ -525,6 +525,32 @@ class RecipeService {
   }
 
   // Get recipe analytics for author
+  /**
+ * Retrieves analytics for a specific recipe owned by the authenticated user.
+ *
+ * This method:
+ * 1. Fetches the requested recipe.
+ * 2. Verifies that the recipe exists.
+ * 3. Ensures the requesting user is the recipe's author.
+ * 4. Aggregates daily view counts for the last 7 recorded days.
+ * 5. Returns the recipe's engagement statistics along with weekly view data.
+ *
+ * @async
+ * @static
+ * @method getRecipeAnalytics
+ * @param {string|ObjectId} recipeId - The ID of the recipe to retrieve analytics for.
+ * @param {string|ObjectId} userId - The ID of the authenticated user requesting the analytics.
+ * @returns {Promise<Object>} An object containing the recipe analytics.
+ * @returns {number} returns.views - Total number of recipe views.
+ * @returns {number} returns.likes - Total number of likes.
+ * @returns {number} returns.saves - Total number of saves.
+ * @returns {number} returns.shares - Total number of shares.
+ * @returns {number} returns.comments - Total number of comments.
+ * @returns {Array<Object>} returns.weeklyViews - Daily view counts for the most recent seven days.
+ * @throws {AppError} Throws a 404 error if the recipe does not exist.
+ * @throws {AppError} Throws a 403 error if the user is not the recipe owner.
+ * @throws {Error} Throws any database or aggregation errors encountered during execution.
+ */
   static async getRecipeAnalytics(recipeId, userId) {
     try {
       const recipe = await Recipe.findById(recipeId);
@@ -584,7 +610,23 @@ class RecipeService {
     }
   }
 
-  // Bulk update recipe status (admin)
+  /**
+ * Updates the status of multiple recipes in a single database operation.
+ *
+ * After successfully updating the specified recipes, all related recipe
+ * caches are cleared to ensure subsequent requests receive the latest data.
+ *
+ * @async
+ * @static
+ * @method bulkUpdateStatus
+ * @param {Array<string|ObjectId>} recipeIds - Array of recipe IDs to update.
+ * @param {string} status - New status to assign to the selected recipes
+ *                          (e.g., "published", "draft").
+ * @returns {Promise<Object>} An object indicating the operation result.
+ * @returns {boolean} returns.success - Indicates whether the update completed successfully.
+ * @returns {number} returns.count - Number of recipes requested for update.
+ * @throws {Error} Throws an error if the database update or cache invalidation fails.
+ */
   static async bulkUpdateStatus(recipeIds, status) {
     try {
       await Recipe.updateMany(
@@ -601,7 +643,28 @@ class RecipeService {
     }
   }
 
-  // Get recipe statistics for admin dashboard
+  /**
+ * Retrieves overall recipe statistics from the database.
+ *
+ * This method executes multiple database queries in parallel to gather
+ * aggregate metrics, including:
+ * - Total number of recipes.
+ * - Number of published recipes.
+ * - Number of draft recipes.
+ * - Total views across all recipes.
+ * - Total likes across all recipes.
+ *
+ * @async
+ * @static
+ * @method getRecipeStatistics
+ * @returns {Promise<Object>} An object containing the aggregated recipe statistics.
+ * @returns {number} returns.totalRecipes - Total number of recipes.
+ * @returns {number} returns.publishedRecipes - Total number of published recipes.
+ * @returns {number} returns.draftRecipes - Total number of draft recipes.
+ * @returns {number} returns.totalViews - Sum of views across all recipes.
+ * @returns {number} returns.totalLikes - Sum of likes across all recipes.
+ * @throws {Error} Throws an error if any database operation fails.
+ */
   static async getRecipeStatistics() {
     try {
       const [
